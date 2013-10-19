@@ -72,6 +72,13 @@ String. Default: 'dddd, Do MMMM YYYY'
 
 Format used for on hover hint. String tokens are parsed against a given date.
 
+### injectStyle
+Boolean. Default: true
+
+By default the required styles are injected into the DOM automatically and no external css reference is required.  In the event that you want to override and customize the default style, set injectStyle to false and ensure that bootstrap-datepaginator.css (or your modified css) is referenced.
+
+Please note - where multiple paginators are applied to the same page, all must be set to injectStyle false otherwise the DOM injected style takes precedence.
+
 ### itemWidth
 Integer. Default: 35
 

@@ -31,9 +31,12 @@
 
 	DatePaginator.defaults = {
 
-		bootstrap2: false,
+		useBootstrap2: false,
+		injectStyle: true,
 
 		fillWidth: true,
+
+
 		highlightSelectedDate: true,
 		highlightToday: true,
 		hint: 'dddd, Do MMMM YYYY',
@@ -202,7 +205,7 @@
 
 				// Setup first time only components, reused on later _renders
 				this.$element
-					.addClass(this.options.bootstrap2 ? 'pagination' : '')
+					.addClass(this.options.useBootstrap2 ? 'pagination' : '')
 					.removeClass('datepaginator datepaginator-sm datepaginator-lg')
 					.addClass(this.options.size === 'sm' ? 'datepaginator-sm' : this.options.size === 'lg' ? 'datepaginator-lg' : 'datepaginator');
 				this.$wrapper = $(this._template.list);
@@ -294,7 +297,7 @@
 
 		_injectStyle: function() {
 			// Make sure we only add it once
-			if (!document.getElementById('bootstrap-datepaginator')) {
+			if (this.options.injectStyle && !document.getElementById('bootstrap-datepaginator')) {
 				$("<style type='text/css' id='bootstrap-datepaginator'> " + this._css + " </style>").appendTo("head");
 			}
 		},
