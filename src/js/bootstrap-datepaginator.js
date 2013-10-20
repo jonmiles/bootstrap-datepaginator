@@ -1,7 +1,7 @@
 /* =========================================================
  * bootstrap-datepaginator.js
  * =========================================================
- * Copyright 2013 Jonathan D Miles 
+ * Copyright 2013 Jonathan Miles 
  * Project URL : http://www.jonathandanielmiles.com/bootstrap-datepaginator
  *	
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,21 +30,19 @@
 	}
 
 	DatePaginator.defaults = {
-
-		useBootstrap2: false,
-		injectStyle: true,
-
 		fillWidth: true,
-
-
 		highlightSelectedDate: true,
 		highlightToday: true,
 		hint: 'dddd, Do MMMM YYYY',
+		injectStyle: true,
+		itemWidth: 35,
+		navItemWidth: 20,
 		offDays: 'Sat,Sun',
 		offDaysFormat: 'ddd',
 		onSelectedDateChanged: null,
 		selectedDate: moment().clone().startOf('day'),
 		selectedDateFormat: 'YYYY-MM-DD',
+		selectedItemWidth: 140,
 		showCalendar: true,
 		showOffDays: true, 
 		showStartOfWeek: true,
@@ -54,11 +52,8 @@
 		squareEdges: false,
 		text: 'ddd<br/>Do',
 		textSelected: 'dddd<br/>Do, MMMM YYYY',
+		useBootstrap2: false,
 		width: 0,
-
-		itemWidth: 35,
-		navItemWidth: 20,
-		selectedItemWidth: 140,
 	}
 
 	DatePaginator.prototype = {
@@ -297,8 +292,8 @@
 
 		_injectStyle: function() {
 			// Make sure we only add it once
-			if (this.options.injectStyle && !document.getElementById('bootstrap-datepaginator')) {
-				$("<style type='text/css' id='bootstrap-datepaginator'> " + this._css + " </style>").appendTo("head");
+			if (this.options.injectStyle && !document.getElementById('bootstrap-datepaginator-style')) {
+				$("<style type='text/css' id='bootstrap-datepaginator-style'> " + this._css + " </style>").appendTo("head");
 			}
 		},
 
@@ -320,7 +315,7 @@
 					isSelected: (m.isSame(this.options.selectedDate)) ? true : false,
 					isToday: (m.isSame(today)) ? true : false,
 					isOffDay: (this.options.offDays.split(",").indexOf(m.format(this.options.offDaysFormat)) !== -1) ? true : false,
-					isStartOfWeek: (this.options.startOfWeek === m.format(this.options.startOfWeekFormat)) ? true : false, 
+					isStartOfWeek: (this.options.startOfWeek.split(",").indexOf(m.format(this.options.startOfWeekFormat)) !== -1) ? true : false, 
 					text: (m.isSame(this.options.selectedDate)) ? m.format(this.options.textSelected) : m.format(this.options.text),
 					hint: m.format(this.options.hint),
 					itemWidth: (m.isSame(this.options.selectedDate)) ? adjustedSelectedItemWidth : adjustedItemWidth
@@ -351,7 +346,7 @@
 	// Prevent against multiple instantiations,
 	// handle updates and method calls
 	$.fn[pluginName] = function(options, args) {
-		this.each(function() {
+		return this.each(function() {
 			var self = $.data(this, 'plugin_' + pluginName);
 			if (typeof options === 'string') {
 				if (!self) {
@@ -379,6 +374,6 @@
 	}
 
 	// Don't break the chain
-	return this;
+	// return this;
 
 })(jQuery, window, document);	
