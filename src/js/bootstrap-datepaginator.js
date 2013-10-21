@@ -131,7 +131,9 @@
 			if (this.initialized) {
 
 				// Cleanup dom
-				this.$calendar.datepicker('remove');
+				if (this.$calendar) {
+					this.$calendar.datepicker('remove');	
+				}
 				this.$wrapper.remove();
 				this.$wrapper = null;
 				// this.$element.remove();
