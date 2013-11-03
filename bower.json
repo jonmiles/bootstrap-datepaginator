@@ -1,0 +1,20 @@
+{
+  "name": "bootstrap-datepaginator",
+  "version": "1.0.0",
+  "homepage": "https://github.com/jonathandanielmiles/bootstrap-datepaginator",
+  "description": "Date Paginator for Twitter Bootstrap",
+  "main": "bootstrap-datepaginator.min.js",
+  "keywords": [
+    "Twitter",
+    "Bootstrap",
+    "Date",
+    "Paginator"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
