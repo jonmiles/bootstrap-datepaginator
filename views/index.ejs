@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Boostrap Date Paginator</title>
+	<link href="./bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+	<link href="./bower_components/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">    
+    <link href='./css/bootstrap-datepaginator.css'  rel='stylesheet'/>
+  </head>
+  <body>
+  	<div class="container">
+    	<h1>Boostrap Date Paginator</h1>
+    	<div id="paginator"></div>
+    </div>
+    <script src="./bower_components/jquery/jquery.js"></script>
+	<script src="./bower_components/moment/moment.js"></script>
+	<script src="./bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script src="./js/bootstrap-datepaginator.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('#paginator').datepaginator();
+		});
+	</script>
+  </body>
+</html>

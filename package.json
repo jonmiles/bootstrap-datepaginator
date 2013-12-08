@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "phantomjs": "~1.9.2-2",
-    "express": "~3.4.2"
+    "express": "~3.4.2",
+    "ejs": "~0.8.5"
   }
 }
