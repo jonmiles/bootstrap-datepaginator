@@ -10,10 +10,10 @@ For full documentation and examples, please visit [Bootstrap Date Paginator Webs
 
 ## Requirements
 
-- [Bootstrap v3.0.0](http://getbootstrap.com/)
-- [jQuery v1.8.2](http://jquery.com/)
-- [Moment.js v2.1.0](http://momentjs.com)
-- [bootstrap-datepicker.js](https://github.com/eternicode/bootstrap-datepicker) 
+- [Bootstrap v3.0.3](http://getbootstrap.com/)
+- [jQuery v2.0.3](http://jquery.com/)
+- [Moment.js v2.4.0](http://momentjs.com)
+- [bootstrap-datepicker.js v1.2.0](https://github.com/eternicode/bootstrap-datepicker) 
 
 Where provided these are the actual versions bootstrap-datepaginator has been tested against.  Other versions should work but you use them as your own risk.
 
