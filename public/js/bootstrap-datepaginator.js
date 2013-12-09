@@ -54,10 +54,6 @@
 		textSelected: 'dddd<br/>Do, MMMM YYYY',
 		useBootstrap2: false,
 		width: 0,
-		startDate: undefined,
-		startDateFormat: 'YYYY-MM-DD',
-		endDate: undefined,
-		endDateFormat: 'YYYY-MM-DD'
 	}
 
 	DatePaginator.prototype = {
@@ -93,16 +89,6 @@
 			// Set the initially selected date, overridding the default value of today
 			if (typeof this.options.selectedDate === 'string') {
 				this.options.selectedDate = moment(this.options.selectedDate, this.options.selectedDateFormat).clone().startOf('day');
-			}
-
-			// Check selected date is within range, if defined
-			if (this.options.startDate) {
-				var startMoment = moment(this.options.startDate, this.options.startDateFormat);
-				var initialMoment = moment(this.options.selectedDate, this.options.selectedDateFormat);
-				if (startMoment.isBefore(initialMoment)) {
-					this.options.selectedDate = startMoment.format(this.options.selectedDateFormat);
-					// TODO Doesn't allow for days visible to the left which could be selected... 
-				}
 			}
 
 			// Parse and nomalize size options
@@ -225,7 +211,6 @@
 						.addClass('dp-nav-left')
 						.addClass(this.options.size === 'sm' ? 'dp-nav-sm' : this.options.size === 'lg' ? 'dp-nav-lg' : '')
 						.addClass(this.options.squareEdges ? 'dp-nav-square-edges' : '')
-						// TODO Disable if startDate within range
 						.append($(this._template.icon)
 							.addClass('glyphicon-chevron-left')
 							.addClass('dp-nav-left'))
@@ -236,7 +221,6 @@
 						.addClass('dp-nav-right')
 						.addClass(this.options.size === 'sm' ? 'dp-nav-sm' : this.options.size === 'lg' ? 'dp-nav-lg' : '')
 						.addClass(this.options.squareEdges ? 'dp-nav-square-edges' : '')
-						// TODO Disable is endDate within range
 						.append($(this._template.icon)
 							.addClass('glyphicon-chevron-right')
 							.addClass('dp-nav-right'))
@@ -293,7 +277,6 @@
 
 			// Add datepicker and setup event handling
 			if (this.$calendar) {
-				// TODO Set earliest and latest selected dates (startDate, endDate)
 				this.$calendar
 					.datepicker({
 						autoclose: true,
@@ -353,7 +336,7 @@
 			calendar: '<i id="dp-calendar" class="glyphicon glyphicon-calendar"></i>'
 		},
 
-		_css: '.datepaginator{font-size:12px;height:60px}.datepaginator-sm{font-size:10px;height:40px}.datepaginator-lg{font-size:14px;height:80px}.pagination{margin:0;padding:0;white-space:nowrap}.dp-nav{height:60px;padding:22px 0!important;width:20px;margin:0!important;text-align:center}.dp-nav-square-edges{border-radius:0!important}.dp-item{height:60px;padding:13px 0!important;width:35px;margin:0!important;border-left-style:hidden!important;text-align:center}.dp-item-sm{height:40px!important;padding:5px!important}.dp-item-lg{height:80px!important;padding:22px 0!important}.dp-nav-sm{height:40px!important;padding:11px 0!important}.dp-nav-lg{height:80px!important;padding:33px 0!important}a.dp-nav-right{border-left-style:hidden!important}.dp-divider{border-left:2px solid #ddd!important}.dp-off{background-color:#F0F0F0!important}.dp-today{background-color:#88B5DB!important;color:#fff!important}.dp-selected{background-color:#428bca!important;color:#fff!important;width:140px}#dp-calendar{padding:3px 5px 0 0!important;position:absolute;right:0;top:10}'
+		_css: '.datepaginator{font-size:12px;height:60px}.datepaginator-sm{font-size:10px;height:40px}.datepaginator-lg{font-size:14px;height:80px}.pagination{margin:0;padding:0;white-space:nowrap}.dp-nav{height:60px;padding:22px 0!important;width:20px;margin:0!important;text-align:center}.dp-nav-square-edges{border-radius:0!important}.dp-item{height:60px;padding:13px 0!important;width:35px;margin:0!important;border-left-style:hidden!important;text-align:center}.dp-item-sm{height:40px!important;padding:5px!important}.dp-item-lg{height:80px!important;padding:22px 0!important}.dp-nav-sm{height:40px!important;padding:11px 0!important}.dp-nav-lg{height:80px!important;padding:33px 0!important}a.dp-nav-right{border-left-style:hidden!important}.dp-divider{border-left:2px solid #ddd!important}.dp-off{background-color:#F0F0F0!important}.dp-today{background-color:#88B5DB!important;color:#fff!important}.dp-selected{background-color:#428bca!important;color:#fff!important;width:140px}#dp-calendar{padding:3px 5px 0 0!important;margin-right:3px;position:absolute;right:0;top:10}'
 	};
 
 	var logError = function(message) {

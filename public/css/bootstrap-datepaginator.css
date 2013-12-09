@@ -89,6 +89,7 @@ a.dp-nav-right {
 
 #dp-calendar {
 	padding: 3px 5px 0px 0px !important;
+	margin-right: 3px;
 	position: absolute;
 	right: 0;
 	top: 10;
