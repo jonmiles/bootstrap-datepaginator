@@ -37,6 +37,10 @@ test("Options setup", function() {
 	equal(options.textSelected, 'dddd<br/>Do, MMMM YYYY', "textSelected default ok");
 	equal(options.useBootstrap2, false, "useBootstrap2 default ok");
 	equal(options.width, el.width(), "width default ok");
+	equal(options.startDate, options.startDate, "startDate default ok");
+	equal(options.startDateFormat, 'YYYY-MM-DD', "startDateFormat default ok")
+	equal(options.endDate, options.endDate, "endDate default ok");
+	equal(options.endDateFormat, 'YYYY-MM-DD', "endDateFormat default ok");
 
 	// Then test user options are correctly set
 	var opts = {
@@ -61,7 +65,11 @@ test("Options setup", function() {
 		squareEdges: true, 
 		text: 'Do<br/>ddd',
 		textSelected: 'dddd<br/>Do, MMMM YYYY',
-		width: 400
+		width: 400,
+		startDate: '01-01-2013',
+		startDateFormat: 'DD-MM-YYYY',
+		endDate: '31-12-2013',
+		endDateFormat: 'DD-MM-YYYY'
 	}
 	options = getOptions(init(opts));
 	ok(options, "User options created ok");
@@ -89,8 +97,13 @@ test("Options setup", function() {
 	equal(options.text, opts.text, "text set ok");
 	equal(options.textSelected, opts.textSelected, "textSelected set ok");
 	// equal(options.useBootstrap2, opts.useBootstrap2, "useBootstrap2 default ok");
-	equal(options.width, 400, "width set ok");
-	
+	equal(options.width, 400, "width set ok");	
+	equal(options.startDate.format('YYYY-MM-DD'),
+		moment(opts.startDate, opts.startDateFormat).startOf('day').format('YYYY-MM-DD'), "startDate set ok");
+	equal(options.startDateFormat, opts.startDateFormat, "startDateFormat set ok");
+	equal(options.endDate.format('YYYY-MM-DD'), 
+		moment(opts.endDate, opts.endDateFormat).startOf('day').format('YYYY-MM-DD'), "endDate set ok");
+	equal(options.endDateFormat, opts.endDateFormat, "endDateFormat set ok");
 });
 
 test("Highlight selected date", function() {
@@ -247,6 +260,14 @@ test("Selected date", function() {
 	options = getOptions(init().datepaginator('setSelectedDate', ['06-10-2013', 'DD-MM-YYYY']));
 	equal($('.dp-selected').attr('data-moment'), moment('06-10-2013','DD-MM-YYYY').format(options.selectedDateFormat), //'2013-10-06',
 		'Correct selectedDate when set via setSelectedDate method using custom selectedDateFormat set in method arguments');
+
+	options = getOptions(init({startDate:'2013-12-01',selectedDate:'2013-11-01'}));
+	equal($('.dp-selected').attr('data-moment'), options.startDate.format(options.selectedDateFormat), 
+		'Correctly overrides selectedDate when invalid : selectedDate < startDate');
+
+	options = getOptions(init({endDate:'2013-12-31',selectedDate:'2014-01-01'}));
+	equal($('.dp-selected').attr('data-moment'), options.endDate.format(options.selectedDateFormat),
+		'Correctly overrides selectedDate when invalid : selectedDate > endDate');
 });
 
 test("Item text", function() {
@@ -306,7 +327,6 @@ test("Square Edges", function() {
 
 
 
-
 module("Behaviour");
 
 test("Is chainable", function() {
@@ -319,37 +339,93 @@ function getSelectedDateAsMoment(options) {
 	return moment($('.dp-selected').attr('data-moment'), options.selectedDateFormat);
 }
 
-test("Navigate left", function() {
+test("Navigate backwards", function() {
+
+	// Test valid navigation
 	var options = getOptions(init()),
 		selectedDate = getSelectedDateAsMoment(options);
 	$('a .dp-nav-left').trigger('click');
 	ok(getSelectedDateAsMoment(options).isSame(selectedDate.clone().subtract('day', 1)), 
-		"Navigate left moves back 1 day");
+		"Navigate backwards moves back 1 day");
+
+	// Test invalid navigation
+	options = getOptions(init({startDate:'2013-11-01',selectedDate:'2013-11-01'})),
+		selectedDate = getSelectedDateAsMoment(options);
+	$('a .dp-nav-left').trigger('click');
+	ok(getSelectedDateAsMoment(options).isSame(selectedDate), 
+		"Navigate backwards stops at start date");
 });
 
-test("Navigate right", function() {
+test("Navigate forwards", function() {
+
+	// Test valid navigation
 	var options = getOptions(init()),
 		selectedDate = getSelectedDateAsMoment(options);
 	$('a .dp-nav-right').trigger('click');
 	ok(getSelectedDateAsMoment(options).isSame(selectedDate.clone().add('day', 1)), 
-		"Navigate right moves forward 1 day");
+		"Navigate forwards moves forward 1 day");
+
+	// Test invalid navigation
+	options = getOptions(init({endDate:'2013-11-01',selectedDate:'2013-11-01'})),
+		selectedDate = getSelectedDateAsMoment(options);
+	$('a .dp-nav-right').trigger('click');
+	ok(getSelectedDateAsMoment(options).isSame(selectedDate), 
+		"Navigate forwards stops at end date");
 });
 
-test("Date select", function() {
+test("Navigate to selected date", function() {
+
+	// Test valid navigation
 	var options = getOptions(init()),	
 		el = $('.dp-item:first');
 	el.trigger('click');
 	ok(getSelectedDateAsMoment(options).isSame(moment(el.attr('data-moment'), options.selectedDateFormat)), 
 		"Navigate to selected date works");	
+
+	// Invalid navigation
+	// - startDate
+	options = getOptions(init({startDate:'2013-11-01',selectedDate:'2013-11-01'})),
+		selectedDate = getSelectedDateAsMoment(options),
+		el = $('.dp-item:first');
+	el.trigger('click');
+	ok(getSelectedDateAsMoment(options).isSame(selectedDate), 
+		"Navigate to selected date does not allow dates before start date");
+
+	// - endDate
+	options = getOptions(init({endDate:'2013-11-01',selectedDate:'2013-11-01'})),
+		selectedDate = getSelectedDateAsMoment(options),
+		el = $('.dp-item:last');
+	el.trigger('click');
+	ok(getSelectedDateAsMoment(options).isSame(selectedDate), 
+		"Navigate to selected date does not allow dates after end date");
 });
 
 test("Calendar select", function() {
+
+	// Valid navigation
 	var options = getOptions(init());
 	var event = $.Event('changeDate');
 	event.date = moment('2013-01-01', 'YYYY-MM-DD').toDate();
 	$('#dp-calendar').trigger(event);
 	ok(getSelectedDateAsMoment(options).isSame(moment('2013-01-01', 'YYYY-MM-DD')), 
-		"Navigate to calendar selected data works");	
+		"Navigate to calendar selected date works");	
+
+	// Invalid navigation
+	// - startDate
+	options = getOptions(init({startDate:'2013-11-01',selectedDate:'2013-11-01'})),
+		selectedDate = getSelectedDateAsMoment(options),
+		event.date = moment('2013-10-01', 'YYYY-MM-DD').toDate();
+	$('#dp-calendar').trigger(event);
+	ok(getSelectedDateAsMoment(options).isSame(selectedDate), 
+		"Navigate to calendar selected date does not allow dates before start date");
+
+	// - endDate
+	options = getOptions(init({endDate:'2013-11-01',selectedDate:'2013-11-01'})),
+		selectedDate = getSelectedDateAsMoment(options),
+		event.date = moment('2013-12-01', 'YYYY-MM-DD').toDate();
+	$('#dp-calendar').trigger(event);
+	ok(getSelectedDateAsMoment(options).isSame(selectedDate), 
+		"Navigate to calendar selected date does not allow dates after end date");
 });
 
 test("Event selectedDateChanged", function() {

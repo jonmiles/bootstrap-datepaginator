@@ -57,6 +57,16 @@ For advanced configuration, an options object can be passed on initialization.
 
 ## Options
 
+### endDate 
+String, or Moment. Default: End of time
+
+Sets the latest date that may be selected, all later dates will be disabled.
+
+### endDateFormat
+String. Default: 'YYYY-MM-DD'
+
+Sets the date format used when parsing string representations of endDate.
+
 ### highlightSelectedDate
 Boolean. Default: true
 
@@ -137,6 +147,16 @@ Whether or not to display the start of week divider.
 String. Default: normal
 
 Sets the height of the paginator component. Accepts small, normal, large.
+
+### startDate 
+String, or Moment. Default: Beginning of time
+
+Sets the earliest date that may be selected, all earlier dates will be disabled.
+
+### startDateFormat
+String. Default: 'YYYY-MM-DD'
+
+Sets the date format used when parsing string representations of startDate.
 
 ### startOfWeek
 String. Default: 'Mon'
