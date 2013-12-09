@@ -1,11 +1,9 @@
 /* =========================================================
  * bootstrap-datepicker.js
- * Repo: https://github.com/eternicode/bootstrap-datepicker/
- * Demo: http://eternicode.github.io/bootstrap-datepicker/
- * Docs: http://bootstrap-datepicker.readthedocs.org/
- * Forked from http://www.eyecon.ro/bootstrap-datepicker
+ * http://www.eyecon.ro/bootstrap-datepicker
  * =========================================================
- * Started by Stefan Petre; improvements by Andrew Rowls + contributors
+ * Copyright 2012 Stefan Petre
+ * Improvements by Andrew Rowls
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -261,7 +259,7 @@
 					resize: $.proxy(this.place, this)
 				}],
 				[$(document), {
-					'mousedown touchstart': $.proxy(function (e) {
+					mousedown: $.proxy(function (e) {
 						// Clicked outside the datepicker, hide it
 						if (!(
 							this.element.is(e.target) ||
@@ -568,7 +566,7 @@
 				date.getUTCDate() == today.getDate()) {
 				cls.push('today');
 			}
-			if (date.valueOf() == currentDate) {
+			if (currentDate && date.valueOf() == currentDate) {
 				cls.push('active');
 			}
 			if (date.valueOf() < this.o.startDate || date.valueOf() > this.o.endDate ||
