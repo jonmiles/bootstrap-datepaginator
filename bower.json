@@ -22,5 +22,8 @@
     "jquery": "~2.0.3",
     "bootstrap-datepicker": "~1.2.0",
     "moment": "~2.4.0"
+  },
+  "resolutions": {
+    "bootstrap": "~3.0.3"
   }
 }
