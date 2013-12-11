@@ -138,7 +138,7 @@
 			this.$element.on('click', $.proxy(this._clickedHandler, this));
 
 			if (typeof (this.options.onSelectedDateChanged) === 'function') {
-				this.$element.on("selectedDateChanged", this.options.onSelectedDateChanged);
+				this.$element.on('selectedDateChanged', this.options.onSelectedDateChanged);
 			}
 
 			if (this.options.fillWidth) {
@@ -187,7 +187,7 @@
 					&& (!selectedDate.isBefore(this.options.startDate)) 
 					&& (!selectedDate.isAfter(this.options.endDate))) {
 				this.options.selectedDate = selectedDate.startOf('day');
-				this.$element.trigger("selectedDateChanged", [selectedDate.clone()]);
+				this.$element.trigger('selectedDateChanged', [selectedDate.clone()]);
 			}
 		},
 
@@ -262,12 +262,12 @@
 
 			// Left nav
 			this.$leftNav
-				.removeClass("dp-no-select")
-				.attr("title", "");
+				.removeClass('dp-no-select')
+				.attr('title', '');
 			if (data.isSelectedStartDate) { 
 				this.$leftNav
-					.addClass("dp-no-select")
-					.attr("title", "Start of valid date range");
+					.addClass('dp-no-select')
+					.attr('title', 'Start of valid date range');
 			}
 			this.$wrapper.append($(self._template.listItem).append(this.$leftNav));
 
@@ -301,7 +301,7 @@
 					$a.addClass('dp-item-lg');
 				}
 				if (!item.isValid) {
-					$a.addClass("dp-no-select");
+					$a.addClass('dp-no-select');
 				}
 				$a.append(item.text);
 
@@ -310,12 +310,12 @@
 
 			// Right nav
 			this.$rightNav
-				.removeClass("dp-no-select")
-				.attr("title", "");
+				.removeClass('dp-no-select')
+				.attr('title', '');
 			if (data.isSelectedEndDate) { 
 				this.$rightNav
-					.addClass("dp-no-select")
-					.attr("title", "End of valid date range"); 
+					.addClass('dp-no-select')
+					.attr('title', 'End of valid date range');
 			}
 			this.$wrapper.append($(self._template.listItem).append(this.$rightNav));
 
@@ -340,7 +340,7 @@
 		_injectStyle: function() {
 			// Make sure we only add it once
 			if (this.options.injectStyle && !document.getElementById('bootstrap-datepaginator-style')) {
-				$("<style type='text/css' id='bootstrap-datepaginator-style'> " + this._css + " </style>").appendTo("head");
+				$('<style type="text/css" id="bootstrap-datepaginator-style">' + this._css + '</style>').appendTo('head');
 			}
 		},
 
@@ -371,8 +371,8 @@
 					isValid: valid,
 					isSelected: (m.isSame(this.options.selectedDate)) ? true : false,
 					isToday: (m.isSame(today)) ? true : false,
-					isOffDay: (this.options.offDays.split(",").indexOf(m.format(this.options.offDaysFormat)) !== -1) ? true : false,
-					isStartOfWeek: (this.options.startOfWeek.split(",").indexOf(m.format(this.options.startOfWeekFormat)) !== -1) ? true : false, 
+					isOffDay: (this.options.offDays.split(',').indexOf(m.format(this.options.offDaysFormat)) !== -1) ? true : false,
+					isStartOfWeek: (this.options.startOfWeek.split(',').indexOf(m.format(this.options.startOfWeekFormat)) !== -1) ? true : false, 
 					text: (m.isSame(this.options.selectedDate)) ? m.format(this.options.textSelected) : m.format(this.options.text),
 					hint: valid ? m.format(this.options.hint) : 'Invalid date',
 					itemWidth: (m.isSame(this.options.selectedDate)) ? adjustedSelectedItemWidth : adjustedItemWidth
@@ -407,10 +407,10 @@
 			var self = $.data(this, 'plugin_' + pluginName);
 			if (typeof options === 'string') {
 				if (!self) {
-					logError("Not initialized, can not call method : " + options);
+					logError('Not initialized, can not call method : ' + options);
 				}
 				else if (!$.isFunction(self[options]) || options.charAt(0) === '_') {
-					logError("No such method : " + options);
+					logError('No such method : ' + options);
 				}
 				else {
 					if (typeof args === 'string') {
