@@ -25,7 +25,7 @@ Where provided these are the actual versions bootstrap-datepaginator has been te
 A full list of dependencies required for the bootstrap-datepaginator to function correctly.
 
 	<!-- Required Stylesheets -->
-    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/bootstrap.css" rel="stylesheet">
     <link href="./css/bootstrap-datepicker.css" rel="stylesheet">
 
 	<!-- Required Javascript -->

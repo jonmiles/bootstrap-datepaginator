@@ -19,6 +19,8 @@
 
 ;(function($, window, document, undefined) {
 
+	/*global jQuery, moment*/
+
 	'use strict';
 
 	var pluginName = 'datepaginator';
@@ -27,7 +29,7 @@
 		this._element = element;
 		this.$element = $(element);
 		this._init(options);
-	}
+	};
 
 	DatePaginator.defaults = {
 		fillWidth: true,
@@ -44,7 +46,7 @@
 		selectedDateFormat: 'YYYY-MM-DD',
 		selectedItemWidth: 140,
 		showCalendar: true,
-		showOffDays: true, 
+		showOffDays: true,
 		showStartOfWeek: true,
 		size: undefined,
 		startOfWeek: 'Mon',
@@ -58,7 +60,7 @@
 		startDateFormat: 'YYYY-MM-DD',
 		endDate: moment(new Date(8640000000000000)),
 		endDateFormat: 'YYYY-MM-DD'
-	}
+	};
 
 	DatePaginator.prototype = {
 
@@ -82,7 +84,7 @@
 
 			// If no width provided, default to fill full width
 			// this.options.width = this.options.width ? this.options.width : this.$element.width();
-			if (this.options.width) { 
+			if (this.options.width) {
 				this.options.fillWidth = false;
 			}
 			else {
@@ -152,7 +154,7 @@
 
 				// Cleanup dom
 				if (this.$calendar) {
-					this.$calendar.datepicker('remove');	
+					this.$calendar.datepicker('remove');
 				}
 				this.$wrapper.remove();
 				this.$wrapper = null;
@@ -183,9 +185,9 @@
 
 		_setSelectedDate: function(selectedDate) {
 
-			if ((!selectedDate.isSame(this.options.selectedDate))
-					&& (!selectedDate.isBefore(this.options.startDate)) 
-					&& (!selectedDate.isAfter(this.options.endDate))) {
+			if ((!selectedDate.isSame(this.options.selectedDate)) &&
+				(!selectedDate.isBefore(this.options.startDate)) &&
+				(!selectedDate.isAfter(this.options.endDate))) {
 				this.options.selectedDate = selectedDate.startOf('day');
 				this.$element.trigger('selectedDateChanged', [selectedDate.clone()]);
 			}
@@ -202,13 +204,13 @@
 	    },
 
 	    _select: function(date) {
-	    	this._setSelectedDate(moment(date, this.options.selectedDateFormat));
-      		this._render();
+			this._setSelectedDate(moment(date, this.options.selectedDateFormat));
+			this._render();
 	    },
 
 	    _calendarSelect: function(event) {
 			this._setSelectedDate(moment(event.date));
-      		this._render();
+			this._render();
 		},
 
 		_resize: function() {
@@ -264,7 +266,7 @@
 			this.$leftNav
 				.removeClass('dp-no-select')
 				.attr('title', '');
-			if (data.isSelectedStartDate) { 
+			if (data.isSelectedStartDate) {
 				this.$leftNav
 					.addClass('dp-no-select')
 					.attr('title', 'Start of valid date range');
@@ -279,22 +281,22 @@
 					.attr('title', item.hint)
 					.width(item.itemWidth);
 
-				if (item.isSelected && self.options.highlightSelectedDate) { 
-					$a.addClass('dp-selected'); 
+				if (item.isSelected && self.options.highlightSelectedDate) {
+					$a.addClass('dp-selected');
 				}
-				if (item.isToday && self.options.highlightToday) { 
-					$a.addClass('dp-today'); 
+				if (item.isToday && self.options.highlightToday) {
+					$a.addClass('dp-today');
 				}
-				if (item.isStartOfWeek && self.options.showStartOfWeek) { 
-					$a.addClass('dp-divider'); 
+				if (item.isStartOfWeek && self.options.showStartOfWeek) {
+					$a.addClass('dp-divider');
 				}
-				if (item.isOffDay && self.options.showOffDays) { 
-					$a.addClass('dp-off'); 
+				if (item.isOffDay && self.options.showOffDays) {
+					$a.addClass('dp-off');
 				}
-				if (item.isSelected && self.options.showCalendar) { 
-					$a.append(self.$calendar); 
+				if (item.isSelected && self.options.showCalendar) {
+					$a.append(self.$calendar);
 				}
-				if (self.options.size === 'sm') { 
+				if (self.options.size === 'sm') {
 					$a.addClass('dp-item-sm');
 				}
 				else if (self.options.size === 'lg') {
@@ -312,7 +314,7 @@
 			this.$rightNav
 				.removeClass('dp-no-select')
 				.attr('title', '');
-			if (data.isSelectedEndDate) { 
+			if (data.isSelectedEndDate) {
 				this.$rightNav
 					.addClass('dp-no-select')
 					.attr('title', 'End of valid date range');
@@ -346,7 +348,7 @@
 
 		_buildData: function() {
 
-			var viewWidth = (this.options.width - ((this.options.selectedItemWidth - this.options.itemWidth) + (this.options.navItemWidth * 2))), 
+			var viewWidth = (this.options.width - ((this.options.selectedItemWidth - this.options.itemWidth) + (this.options.navItemWidth * 2))),
 				units = Math.floor(viewWidth / this.options.itemWidth),
 				unitsPerSide = parseInt(units / 2),
 				adjustedItemWidth = Math.floor(viewWidth / units),
@@ -363,16 +365,16 @@
 
 			for (var m = start; m.isBefore(end); m.add('days', 1)) {
 
-				var valid = ((m.isSame(this.options.startDate) || m.isAfter(this.options.startDate)) && 
+				var valid = ((m.isSame(this.options.startDate) || m.isAfter(this.options.startDate)) &&
 							(m.isSame(this.options.endDate) || m.isBefore(this.options.endDate))) ? true : false;
 				
-				data.items[data.items.length] = { 
+				data.items[data.items.length] = {
 					m: m.clone().format(this.options.selectedDateFormat),
 					isValid: valid,
 					isSelected: (m.isSame(this.options.selectedDate)) ? true : false,
 					isToday: (m.isSame(today)) ? true : false,
 					isOffDay: (this.options.offDays.split(',').indexOf(m.format(this.options.offDaysFormat)) !== -1) ? true : false,
-					isStartOfWeek: (this.options.startOfWeek.split(',').indexOf(m.format(this.options.startOfWeekFormat)) !== -1) ? true : false, 
+					isStartOfWeek: (this.options.startOfWeek.split(',').indexOf(m.format(this.options.startOfWeekFormat)) !== -1) ? true : false,
 					text: (m.isSame(this.options.selectedDate)) ? m.format(this.options.textSelected) : m.format(this.options.text),
 					hint: valid ? m.format(this.options.hint) : 'Invalid date',
 					itemWidth: (m.isSame(this.options.selectedDate)) ? adjustedSelectedItemWidth : adjustedItemWidth
@@ -397,7 +399,7 @@
 	var logError = function(message) {
         if(window.console) {
             window.console.error(message);
-        }                                   
+        }
     };
 
 	// Prevent against multiple instantiations,
@@ -418,16 +420,16 @@
 					}
 					self[options].apply(self, args);
 				}
-			} 
+			}
 			else {
 				if (!self) {
 					$.data(this, 'plugin_' + pluginName, new DatePaginator(this, options));
 				}
 				else {
 					self._init(options);
-				}	
+				}
 			}
 		});
-	}
+	};
 
-})(jQuery, window, document);	
+})(jQuery, window, document);
