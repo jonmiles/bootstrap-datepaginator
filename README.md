@@ -4,7 +4,7 @@
 
 A jQuery plugin which takes Twitter Bootstrap's already great pagination component and injects a bit of date based magic. In the process creating a hugely simplified and modularised way of paging date based results in your application.  
 
-![Bootstrap Date Paginator Default](https://raw.github.com/jonathandanielmiles/bootstrap-datepaginator/master/screenshot/default.PNG)
+![Bootstrap Date Paginator Default](https://raw.github.com/jondmiles/bootstrap-datepaginator/master/screenshot/default.PNG)
 
 For full documentation and examples, please visit [Bootstrap Date Paginator Website](http://www.jonathandanielmiles.com/bootstrap-datepaginator/ "Click to visit Bootstrap Date Paginator")
 
