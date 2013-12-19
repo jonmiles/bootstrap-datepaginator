@@ -6,7 +6,7 @@ A jQuery plugin which takes Twitter Bootstrap's already great pagination compone
 
 ![Bootstrap Date Paginator Default](https://raw.github.com/jondmiles/bootstrap-datepaginator/master/screenshot/default.PNG)
 
-For full documentation and examples, please visit [Bootstrap Date Paginator Website](http://www.jonathandanielmiles.com/bootstrap-datepaginator/ "Click to visit Bootstrap Date Paginator")
+For full documentation and examples, please visit [Bootstrap Date Paginator Website](http://www.jondmiles.com/bootstrap-datepaginator/ "Click to visit Bootstrap Date Paginator")
 
 ## Requirements
 
