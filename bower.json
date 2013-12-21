@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "homepage": "https://github.com/jondmiles/bootstrap-datepaginator",
   "description": "Date Paginator for Twitter Bootstrap",
-  "main": "bootstrap-datepaginator.min.js",
+  "main": ["dist/bootstrap-datepaginator.min.js", "dist/bootstrap-datepaginator.min.css"]
   "keywords": [
     "Twitter",
     "Bootstrap",
