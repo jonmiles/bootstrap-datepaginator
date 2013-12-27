@@ -181,7 +181,7 @@ String. Default: 'ddd&lt;br/&gt;Do'
 Format used for item text i.e. date format. String tokens are parsed against a given date.
 
 ### textSelected
-String. Defualt: 'dddd&lt;br/&gt;Do, MMMM YYYY'
+String. Default: 'dddd&lt;br/&gt;Do, MMMM YYYY'
 
 Format used for the selected item text. String tokens are parsed against a given date.
 
