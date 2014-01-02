@@ -1,6 +1,6 @@
 /* global module, test, ok, equal, moment, $ */
 
-;(function() {
+;(function () {
 
 	'use strict';
 
@@ -16,17 +16,7 @@
 		return el.data('plugin_datepaginator').options;
 	}
 
-	// Better handling of !ok expression to satisfy jshint
-	function notOk(actual, expected) {
-		if (!ok(actual, expected)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	
-	test('Options setup', function() {
+	test('Options setup', function () {
 		// First test defaults option values
 		var el = init(),
 			options = getOptions(el);
@@ -70,7 +60,7 @@
 			navItemWidth: 50,
 			offDays: '7,0',
 			offDaysFormat: 'd',
-			onSelectedDateChanged: function() {},
+			onSelectedDateChanged: function () {},
 			selectedDate: '05-10-2013',
 			selectedDateFormat: 'DD-MM-YYYY',
 			selectedItemWidth: 200,
@@ -131,14 +121,14 @@
 		init();
 		equal($('.dp-selected').attr('data-moment'), moment().format('YYYY-MM-DD'), 'Correct date is highlighted when set to true');
 		init({highlightSelectedDate:false});
-		notOk($('.dp-selected'), 'No date is highlighted when set to false');
+		ok(!$('.dp-selected').length, 'No date is highlighted when set to false');
 	});
 
 	test('Highlight today', function () {
 		init();
 		equal($('.dp-today').attr('data-moment'), moment().format('YYYY-MM-DD'), 'Correct date is highlighted when set to true');
 		init({highlightToday:false});
-		notOk($('.dp-today'), 'No date is highlighted when set to false');
+		ok(!$('.dp-today').length, 'No date is highlighted when set to false');
 	});
 
 	test('Hint', function () {
@@ -149,38 +139,38 @@
 		equal(expected, actual, 'Hint correct "' + expected + '" = "' + actual + '"');
 	});
 
-	// test('injectStyle', function() {
+	// test('injectStyle', function () {
 	// 	init({injectStyle:false});
 	// 	console.log('style = ' + $('#bootstrap-datepaginator-style'));
 	// 	ok($('#bootstrap-datepaginator-style'))
 	// });
 
-	// test('itemWidth', function() {
+	// test('itemWidth', function () {
 	// 	var options = getOptions(init({itemWidth:50}));
 	// 	console.log('width = ' + $('.dp-item').width() + ' / ' + options.itemWidth);
 	// 	ok($('.dp-item:first').css('width') >= 50, 'Item width ok');
 	// });
 
-	// test('navItemWidth', function() {
+	// test('navItemWidth', function () {
 	// 	var el = init({navItemWidth:50});
 	// 	console.log('nav width = ' + $('.dp-nav:first').width());
 	// 	ok($('.dp-nav:first').width() >= 50, 'Item width ok');
 	// });
 
-	// test('selectedItemWidth', function() {
+	// test('selectedItemWidth', function () {
 	// 	var el = init({selectedItemWidth:150});
 	// 	console.log('nav width = ' + $('.dp-selected').width());
 	// 	ok($('.dp-selected').width() >= 150, 'Item width ok');
 	// });
 
-	test('Show calendar', function() {
+	test('Show calendar', function () {
 		init();
 		ok($('#dp-calendar'), 'Calendar shown when set to true');
 		init({showCalendar:false});
-		notOk($('#dp-calendar'), 'No calendar when set to false');
+		ok(!$('#dp-calendar').length, 'No calendar when set to false');
 	});
 
-	test('Off days', function() {
+	test('Off days', function () {
 
 		function dayOfWeek(obj, options) {
 			return moment($(obj).attr('data-moment'), options.selectedDateFormat).format(options.offDaysFormat);
@@ -199,7 +189,7 @@
 
 		function offDaysShown(options) {
 			var shown = false;
-			$.each($('.dp-item'), function(i, obj) {
+			$.each($('.dp-item.dp-off'), function(i, obj) {
 				var day = dayOfWeek(obj, options);
 				if (options.offDays.split(',').indexOf(day) !== -1) {
 					shown = true;
@@ -215,10 +205,10 @@
 		ok(offDaysCorrect(getOptions(init({offDays:undefined}))), 'Correct off days shown when offDays set to undefined');
 		ok(offDaysShown(getOptions(init())), 'Off days shown when set as default showOffDays');
 		ok(offDaysShown(getOptions(init({showOffDays:true}))), 'Off days shown when showOffDays set to true');
-		notOk(offDaysShown(getOptions(init({showOffDays:false}))), 'No off days shown when showOffDays set to false');
+		ok(!offDaysShown(getOptions(init({showOffDays:false}))), 'No off days shown when showOffDays set to false');
 	});
 
-	test('Start of week divider', function() {
+	test('Start of week divider', function () {
 
 		function dayOfWeek(obj, options) {
 			return moment($(obj).attr('data-moment'), options.selectedDateFormat).format(options.startOfWeekFormat);
@@ -237,7 +227,7 @@
 
 		function startOfWeekShown(options) {
 			var shown = false;
-			$.each($('.dp-item'), function(i, obj) {
+			$.each($('.dp-item.dp-divider'), function(i, obj) {
 				var day = dayOfWeek(obj, options);
 				if (options.startOfWeek.split(',').indexOf(day) !== -1) {
 					shown = true;
@@ -253,10 +243,10 @@
 		ok(startOfWeekCorrect(getOptions(init({startOfWeek:undefined}))), 'Correct start of week shown when startOfWeek set to undefined');
 		ok(startOfWeekShown(getOptions(init())), 'Start of week divider shown when set as default showStartOfWeek');
 		ok(startOfWeekShown(getOptions(init({showStartOfWeek:true}))), 'Start of week divider shown when showStartOfWeek set to true');
-		notOk(startOfWeekShown(getOptions(init({showStartOfWeek:false}))), 'No start of week divider shown when showStartOfWeek set to false');
+		ok(!startOfWeekShown(getOptions(init({showStartOfWeek:false}))), 'No start of week divider shown when showStartOfWeek set to false');
 	});
 
-	test('Selected date', function() {
+	test('Selected date', function () {
 
 		var options = getOptions(init());
 		equal($('.dp-selected').attr('data-moment'), moment().format(options.selectedDateFormat),
@@ -291,7 +281,7 @@
 			'Correctly overrides selectedDate when invalid : selectedDate > endDate');
 	});
 
-	test('Item text', function() {
+	test('Item text', function () {
 
 		function formatText(el, format) {
 			return moment(el.attr('data-moment')).format(format)
@@ -317,15 +307,15 @@
 			'Selected item text correct when using custom value');
 	});
 
-	test('Size', function() {
+	test('Size', function () {
 		init();
 		ok($('.datepaginator'), 'Correctly set .datepaginator when using default ');
-		notOk($('.dp-item-sm') || $('.dp-item-lg'), 'Item set correct when using default');
-		notOk($('.dp-nav-sm') || $('.dp-nav-lg'), 'Nav item set correct when using default');
+		ok(!$('.dp-item-sm').length || !$('.dp-item-lg').length, 'Item set correct when using default');
+		ok(!$('.dp-nav-sm').length || !$('.dp-nav-lg').length, 'Nav item set correct when using default');
 		init({size:'normal'});
 		ok($('.datepaginator'), 'Correctly set .datepaginator when size set as normal ');
-		notOk($('.dp-item-sm') || $('.dp-item-lg'), 'Item set correct when size set as normal');
-		notOk($('.dp-nav-sm') || $('.dp-nav-lg'), 'Nav item set correct when size set as normal');
+		ok(!$('.dp-item-sm').length || !$('.dp-item-lg').length, 'Item set correct when size set as normal');
+		ok(!$('.dp-nav-sm').length || !$('.dp-nav-lg').length, 'Nav item set correct when size set as normal');
 		init({size:'small'});
 		ok($('.datepaginator-sm'), 'Container set to .datepaginator-sm when size set to small');
 		ok($('.dp-item-sm'), 'Item set to .dp-item-sm when size is set to small');
@@ -337,11 +327,11 @@
 	});
 
 
-	test('Square Edges', function() {
+	test('Square Edges', function () {
 		init();
-		notOk($('.dp-nav-sqauare-edges'), 'Using rounded edges by default');
+		ok(!$('.dp-nav-sqauare-edges').length, 'Using rounded edges by default');
 		init({squareEdges:false});
-		notOk($('.dp-nav-sqauare-edges'), 'Square edges not used when squareEdges set to false');
+		ok(!$('.dp-nav-sqauare-edges').length, 'Square edges not used when squareEdges set to false');
 		init({squareEdges:true});
 		ok($('.dp-nav-sqauare-edges'), 'Square edges set correctly when squareEdges set to true');
 	});
@@ -350,7 +340,7 @@
 
 	module('Behaviour');
 
-	test('Is chainable', function() {
+	test('Is chainable', function () {
 		var el = init();
 		ok(el.addClass('test'), 'Is chainable');
 		equal(el.attr('class'), 'datepaginator test', 'Test class was added');
@@ -360,7 +350,7 @@
 		return moment($('.dp-selected').attr('data-moment'), options.selectedDateFormat);
 	}
 
-	test('Navigate backwards', function() {
+	test('Navigate backwards', function () {
 
 		// Test valid navigation
 		var options = getOptions(init()),
@@ -377,7 +367,7 @@
 			'Navigate backwards stops at start date');
 	});
 
-	test('Navigate forwards', function() {
+	test('Navigate forwards', function () {
 
 		// Test valid navigation
 		var options = getOptions(init()),
@@ -394,7 +384,7 @@
 			'Navigate forwards stops at end date');
 	});
 
-	test('Navigate to selected date', function() {
+	test('Navigate to selected date', function () {
 
 		// Test valid navigation
 		var options = getOptions(init()),
@@ -419,7 +409,7 @@
 			'Navigate to selected date does not allow dates after end date');
 	});
 
-	test('Calendar select', function() {
+	test('Calendar select', function () {
 
 		// Valid navigation
 		var options = getOptions(init());
@@ -445,7 +435,7 @@
 			'Navigate to calendar selected date does not allow dates after end date');
 	});
 
-	test('Event selectedDateChanged', function() {
+	test('Event selectedDateChanged', function () {
 		var cbWorked, onWorked = false;
 		init({
 			onSelectedDateChanged: function(/*event, date*/) {
