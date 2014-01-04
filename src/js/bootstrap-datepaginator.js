@@ -54,7 +54,6 @@
 		squareEdges: false,
 		text: 'ddd<br/>Do',
 		textSelected: 'dddd<br/>Do, MMMM YYYY',
-		useBootstrap2: false,
 		width: 0,
 		startDate: moment(new Date(-8640000000000000)),
 		startDateFormat: 'YYYY-MM-DD',
@@ -226,7 +225,6 @@
 
 				// Setup first time only components, reused on later _renders
 				this.$element
-					.addClass(this.options.useBootstrap2 ? 'pagination' : '')
 					.removeClass('datepaginator datepaginator-sm datepaginator-lg')
 					.addClass(this.options.size === 'sm' ? 'datepaginator-sm' : this.options.size === 'lg' ? 'datepaginator-lg' : 'datepaginator');
 				this.$wrapper = $(this._template.list);

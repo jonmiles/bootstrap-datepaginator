@@ -43,7 +43,6 @@
 		equal(options.squareEdges, false, 'squareEdges default ok');
 		equal(options.text, 'ddd<br/>Do', 'text default ok');
 		equal(options.textSelected, 'dddd<br/>Do, MMMM YYYY', 'textSelected default ok');
-		equal(options.useBootstrap2, false, 'useBootstrap2 default ok');
 		equal(options.width, el.width(), 'width default ok');
 		equal(options.startDate, options.startDate, 'startDate default ok');
 		equal(options.startDateFormat, 'YYYY-MM-DD', 'startDateFormat default ok');
@@ -105,7 +104,6 @@
 		equal(options.squareEdges, opts.squareEdges, 'squareEdges set ok');
 		equal(options.text, opts.text, 'text set ok');
 		equal(options.textSelected, opts.textSelected, 'textSelected set ok');
-		// equal(options.useBootstrap2, opts.useBootstrap2, 'useBootstrap2 default ok');
 		equal(options.width, 400, 'width set ok');
 		equal(options.startDate.format('YYYY-MM-DD'),
 			moment(opts.startDate, opts.startDateFormat).startOf('day').format('YYYY-MM-DD'), 'startDate set ok');
