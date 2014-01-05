@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>Bootstrap Date Paginator</title>
-	<link href="./bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-	<link href="./bower_components/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">    
+  	<link href="./bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+  	<link href="./bower_components/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">    
     <link href='./css/bootstrap-datepaginator.css'  rel='stylesheet'/>
   </head>
   <body>
@@ -15,6 +15,9 @@
       <br/>
       <h2>Defined start and end date <br/>[2013-11-01 - 2013-11-30]</h2>
       <div id="paginator-start-end"></div>
+      <br/>
+      <h2>Off days - Sat,Sun + defined holidays</h2>
+      <div id="paginator-scheduled-off-days"></div>
     </div>
     <script src="./bower_components/jquery/jquery.js"></script>
   	<script src="./bower_components/moment/moment.js"></script>
@@ -22,8 +25,32 @@
   	<script src="./js/bootstrap-datepaginator.js"></script>
   	<script type="text/javascript">
   		$(function() {
+
   			$('#paginator').datepaginator();
+
         $('#paginator-start-end').datepaginator({selectedDate:'2013-11-05',startDate:'2013-11-01',endDate:'2013-11-30'});
+
+        var options = {
+          offDays: [
+            {
+              dates: ['Sat','Sun'],
+              format: 'ddd'
+            }, 
+            {
+              dates: ['2013-12-24','2013-12-25'],
+              format: 'YYYY-MM-DD'
+            }
+          ],
+          startOfWeek: {
+            dates: ['Mon'],
+            format: 'ddd'
+          },
+          selectedDate: {
+            date: '2013-12-31',
+            format: 'YYYY-MM-DD'
+          }
+        };
+        $('#paginator-scheduled-off-days').datepaginator(options);
   		});
   	</script>
   </body>

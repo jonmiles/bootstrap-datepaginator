@@ -47,8 +47,11 @@ The most basic usage, in most cases this is all you'll need.
 For advanced configuration, an options object can be passed on initialization.  
 
 	var options = {
-		selectedDate: '2013-01-01',
-		selectedDateFormat:  'YYYY-MM-DD'
+		highlightSelectedDate: true,
+		selectedDate: {
+			date: '2014-01-01',
+			format: 'YYYY-MM-DD'
+		}
 	}
 	$('#paginator').datepaginator(options);
 
@@ -57,22 +60,38 @@ For advanced configuration, an options object can be passed on initialization.
 
 ## Options
 
+
+### dateFormat
+String.  Default: 'YYYY-MM-DD'
+
+Sets the default date parsing format, used for all date based string parsing unless overridden.
+
+### dayFormat
+String.  Default: 'ddd'
+
+Sets the default day parsing format, used for all day based string parsing unless overridden.
+
 ### endDate 
-String, or Moment. Default: End of time
+Object.  Default: End of time
 
 Sets the latest date that may be selected, all later dates will be disabled.
 
-### endDateFormat
-String. Default: 'YYYY-MM-DD'
+Example
 
-Sets the date format used when parsing string representations of endDate.
+	endDate: {
+		date: '2014-01-31',
+		format: 'YYYY-MM-DD'
+	}
+
+### endDateFormat
+Deprecated as of v1.2.0; use endDate.format instead.
 
 ### highlightSelectedDate
 Boolean. Default: true
 
 Whether or not to distinguish visually the selected date.
 
-###highlightToday
+### highlightToday
 Boolean. Default: true
 
 Whether or not to distinguish visually today's date.
@@ -100,28 +119,34 @@ Integer. Default: 20
 Minimum width specified in pixels for the nav items e.g. left and right arrows
 
 ### offDays
-String (csv). Default: 'Sat,Sun'
+Object.  Default: 'Sat,Sun'
 
 Sets days of the week to be considered off days, visually greyed out.
 
+Example
+
+	offDays: [{
+		dates: [ 'Sat', 'Sun' ],
+		format: 'ddd'
+	}]
+
 ### offDaysFormat
-String. Default: 'ddd'
-
-Sets the format used when evaluating offDays. For example, 'ddd' formats as a 3 letter abbreviation representing the day of the week, therefore Saturday becomes 'Sat'.
-
-Please review Moment.js formatting guide for a full list of supported options.
+Deprecated as of v1.2.0; use offDays.format instead.
 
 ### selectedDate
-String, or Moment. Default: moment(), equivalent to new Date()
+Object.
+
+	selectedDate: {
+		date: '2014-01-05',
+		format: 'YYYY-MM-DD'
+	}
 
 Sets the initial selected date, provided as either a Moment.js moment object or String.
 
 *If you're planning on providing a String, please ensure you review the dateFormat option.
 
 ### selectedDateFormat
-String. Default: 'YYYY-MM-DD'
-
-Sets the date format used throughout the components lifecycle when parsing the selected date object.
+Deprecated as of v1.2.0; use selectedDate.format instead.
 
 ### selectedItemWidth
 Integer. Default: 120
@@ -149,26 +174,34 @@ String. Default: normal
 Sets the height of the paginator component. Accepts small, normal, large.
 
 ### startDate 
-String, or Moment. Default: Beginning of time
+Object. Default: Beginning of time
 
 Sets the earliest date that may be selected, all earlier dates will be disabled.
 
-### startDateFormat
-String. Default: 'YYYY-MM-DD'
+Example
 
-Sets the date format used when parsing string representations of startDate.
+	startDate: {
+		date: '2014-01-01',
+		format: 'YYYY-MM-DD'
+	}
+
+### startDateFormat
+Deprecated as of v1.2.0; use startDate.format instead.
 
 ### startOfWeek
-String. Default: 'Mon'
+Object. Default: 'Mon'
 
 Sets for display purposes the start of the week, visually illustrated by a thicker dividing line betweeen dates.
 
+Example
+
+	startOfWeek: {
+		dates: [ 'Mon' ],
+		format: 'ddd'
+	}
+
 ### startOfWeekFormat
-String. Default: 'ddd'
-
-Sets the format used when evaluating startOfWeek. For example, 'ddd' formats as a 3 letter abbreviation representing the day of the week, therefore Saturday becomes 'Sat'.
-
-Please review Moment.js formatting guide for a full list of supported options.
+Deprecated as of v1.2.0; use startOfWeek.format instead.
 
 ### squareEdges
 Boolean. Default: false

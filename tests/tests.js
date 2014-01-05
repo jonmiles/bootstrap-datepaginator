@@ -1,4 +1,4 @@
-/* global module, test, ok, equal, moment, $ */
+/* global module, test, ok, equal, deepEqual, moment, $ */
 
 ;(function () {
 
@@ -28,26 +28,22 @@
 		equal(options.injectStyle, true, 'injectStyle default ok');
 		equal(options.itemWidth, 35, 'itemWidth default ok');
 		equal(options.navItemWidth, 20, 'navItemWidth default ok');
-		equal(options.offDays, 'Sat,Sun', 'offDays default ok');
-		equal(options.offDaysFormat, 'ddd', 'offDaysFormat default ok');
+		deepEqual(options.offDays, [{ dates: ['Sat', 'Sun'], format: 'ddd' }], 'offDays default ok');
 		equal(options.onSelectedDateChanged, null, 'onSelectedDateChanged default ok');
-		equal(options.selectedDate.format('YYYY-MM-DD'), moment().startOf('day').format('YYYY-MM-DD'), 'selectedDate default ok');
-		equal(options.selectedDateFormat, 'YYYY-MM-DD', 'selectedDateFormat default ok');
+		equal(options.selectedDate.date.format('YYYY-MM-DD'), moment().startOf('day').format('YYYY-MM-DD'), 'selectedDate default ok');
+		equal(options.selectedDate.format, 'YYYY-MM-DD', 'selectedDateFormat default ok');
 		equal(options.selectedItemWidth, 140, 'selectedItemWidth default ok');
 		equal(options.showCalendar, true, 'showCalendar default ok');
 		equal(options.showOffDays, true, 'showOffDays default ok');
 		equal(options.showStartOfWeek, true, 'showStartOfWeek default ok');
 		equal(options.size, undefined, 'size default ok');
-		equal(options.startOfWeek, 'Mon', 'startOfWeek default ok');
-		equal(options.startOfWeekFormat, 'ddd', 'startOfWeekFormat default ok');
+		deepEqual(options.startOfWeek, { dates: ['Mon'], format: 'ddd' }, 'startOfWeek default ok');
 		equal(options.squareEdges, false, 'squareEdges default ok');
 		equal(options.text, 'ddd<br/>Do', 'text default ok');
 		equal(options.textSelected, 'dddd<br/>Do, MMMM YYYY', 'textSelected default ok');
 		equal(options.width, el.width(), 'width default ok');
-		equal(options.startDate, options.startDate, 'startDate default ok');
-		equal(options.startDateFormat, 'YYYY-MM-DD', 'startDateFormat default ok');
-		equal(options.endDate, options.endDate, 'endDate default ok');
-		equal(options.endDateFormat, 'YYYY-MM-DD', 'endDateFormat default ok');
+		deepEqual(options.startDate, {date:moment(new Date(-8640000000000000)), format:'YYYY-MM-DD'}, 'startDate default ok');
+		deepEqual(options.endDate, {date:moment(new Date(8640000000000000)), format:'YYYY-MM-DD'}, 'endDate default ok');
 
 		// Then test user options are correctly set
 		var opts = {
@@ -57,26 +53,38 @@
 			injectStyle: false,
 			itemWidth: 50,
 			navItemWidth: 50,
-			offDays: '7,0',
-			offDaysFormat: 'd',
+			offDays: [{
+				dates: ['7', '0'],
+				format: 'd'
+			}],
 			onSelectedDateChanged: function () {},
-			selectedDate: '05-10-2013',
-			selectedDateFormat: 'DD-MM-YYYY',
+			// selectedDate: '05-10-2013',
+			// selectedDateFormat: 'DD-MM-YYYY',
+			selectedDate: {
+				date: '05-10-2013',
+				format: 'DD-MM-YYYY'
+			},
 			selectedItemWidth: 200,
 			showCalendar: false,
 			showOffDays: false,
 			showStartOfWeek: false,
 			size: 'small',
-			startOfWeek: '0',
-			startOfWeekFormat: 'd',
+			startOfWeek: {
+				dates: ['0'],
+				format: 'd'
+			},
 			squareEdges: true,
 			text: 'Do<br/>ddd',
 			textSelected: 'dddd<br/>Do, MMMM YYYY',
 			width: 400,
-			startDate: '01-01-2013',
-			startDateFormat: 'DD-MM-YYYY',
-			endDate: '31-12-2013',
-			endDateFormat: 'DD-MM-YYYY'
+			startDate: {
+				date: '01-01-2013',
+				format: 'DD-MM-YYYY'
+			},
+			endDate: {
+				date: '31-12-2013',
+				format: 'DD-MM-YYYY'
+			}
 		};
 
 		options = getOptions(init(opts));
@@ -88,32 +96,82 @@
 		equal(options.injectStyle, opts.injectStyle, 'injectStyle set ok');
 		equal(options.itemWidth, opts.itemWidth, 'itemWidth set ok');
 		equal(options.navItemWidth, opts.navItemWidth, 'navItemWidth set ok');
-		equal(options.offDays, opts.offDays, 'offDays set ok');
-		equal(options.offDaysFormat, opts.offDaysFormat, 'offDaysFormat set ok');
+		deepEqual(options.offDays, opts.offDays, 'offDays set ok');
 		equal(typeof options.onSelectedDateChanged, 'function', 'onSelectedDateChanged set ok');
-		equal(options.selectedDate.format('YYYY-MM-DD'),
-			moment(opts.selectedDate, opts.selectedDateFormat).startOf('day').format('YYYY-MM-DD'), 'selectedDate set ok');
-		equal(options.selectedDateFormat, opts.selectedDateFormat, 'selectedDateFormat set ok');
+		equal(options.selectedDate.date.format('YYYY-MM-DD'),
+			moment(opts.selectedDate.date, opts.selectedDate.format).startOf('day').format('YYYY-MM-DD'), 'selectedDate set ok');
+		equal(options.selectedDate.format, opts.selectedDate.format, 'selectedDateFormat set ok');
 		equal(options.selectedItemWidth, opts.selectedItemWidth, 'selectedItemWidth set ok');
 		equal(options.showCalendar, opts.showCalendar, 'showCalendar set ok');
 		equal(options.showOffDays, opts.showOffDays, 'showOffDays set ok');
 		equal(options.showStartOfWeek, opts.showStartOfWeek, 'showStartOfWeek set ok');
 		equal(options.size, 'sm', 'size set ok');
-		equal(options.startOfWeek, opts.startOfWeek, 'startOfWeek set ok');
-		equal(options.startOfWeekFormat, opts.startOfWeekFormat, 'startOfWeekFormat set ok');
+		deepEqual(options.startOfWeek, opts.startOfWeek, 'startOfWeek set ok');
 		equal(options.squareEdges, opts.squareEdges, 'squareEdges set ok');
 		equal(options.text, opts.text, 'text set ok');
 		equal(options.textSelected, opts.textSelected, 'textSelected set ok');
 		equal(options.width, 400, 'width set ok');
-		equal(options.startDate.format('YYYY-MM-DD'),
-			moment(opts.startDate, opts.startDateFormat).startOf('day').format('YYYY-MM-DD'), 'startDate set ok');
-		equal(options.startDateFormat, opts.startDateFormat, 'startDateFormat set ok');
-		equal(options.endDate.format('YYYY-MM-DD'),
-			moment(opts.endDate, opts.endDateFormat).startOf('day').format('YYYY-MM-DD'), 'endDate set ok');
-		equal(options.endDateFormat, opts.endDateFormat, 'endDateFormat set ok');
+		deepEqual(options.startDate, opts.startDate, 'startDate set ok');
+		deepEqual(options.endDate, opts.endDate, 'endDate set ok');
+	});
+
+	test('Options 1.2.0 backwards compatible', function () {
+
+		var opts = {
+			offDays: 'Sat,Sun',
+			offDaysFormat: 'ddd',
+			startOfWeek: 'Mon',
+			startOfWeekFormat: 'ddd',
+			startDate: '2014-01-01',
+			startDateFormat: 'YYYY-MM-DD',
+			endDate: '2014-12-31',
+			endDateFormat: 'YYYY-MM-DD',
+			selectedDate: '2014-01-01',
+			selectedDateFormat: 'YYYY-MM-DD'
+		};
+		var options = getOptions(init(opts));
+
+		var expectedOffDays = [
+			{
+				dates: [ 'Sat', 'Sun' ],
+				format: 'ddd'
+			}
+		];
+		ok((((typeof options.offDays) === 'object') &&
+			(options.offDays instanceof Array)), 'offDays convert to the right type');
+		deepEqual(expectedOffDays, options.offDays, 'offDays contain the correct dates');
+
+		var expectedStartOfWeek = {
+			dates: [ 'Mon' ],
+			format: 'ddd'
+		};
+		ok(((typeof options.startOfWeek) === 'object'), 'startOfWeek converts to the right type');
+		deepEqual(expectedStartOfWeek, options.startOfWeek, 'startOfWeek contains the correct dates');
+
+		var expectedStartDate = {
+			date: moment('2014-01-01', 'YYYY-MM-DD').startOf('day'),
+			format: 'YYYY-MM-DD'
+		};
+		ok(((typeof options.startDate) === 'object'), 'startDate converts to the right type');
+		deepEqual(expectedStartDate, options.startDate, 'startDate contains the correct dates');
+
+		var expectedEndDate = {
+			date: moment('2014-12-31', 'YYYY-MM-DD').startOf('day'),
+			format: 'YYYY-MM-DD'
+		};
+		ok(((typeof options.endDate) === 'object'), 'endDate converts to the right type');
+		deepEqual(expectedEndDate, options.endDate, 'endDate contains the correct dates');
+
+		var expectedSelectedDate = {
+			date: moment('2014-01-01', 'YYYY-MM-DD'),
+			format: 'YYYY-MM-DD'
+		};
+		ok(((typeof options.selectedDate) === 'object'), 'selectedDate converts to the right type');
+		deepEqual(expectedSelectedDate, options.selectedDate, 'selectedDate contains the correct dates');
 	});
 
 	
+	module('Appearance');
 
 	test('Highlight selected date', function () {
 		init();
@@ -170,36 +228,40 @@
 
 	test('Off days', function () {
 
-		function dayOfWeek(obj, options) {
-			return moment($(obj).attr('data-moment'), options.selectedDateFormat).format(options.offDaysFormat);
+		function dayOfWeek(obj, options, offDays) {
+			return moment($(obj).attr('data-moment'), options.selectedDateFormat).format(offDays.format);
 		}
 		
 		function offDaysCorrect(options) {
 			var correct = true;
-			$.each($('.dp-off'), function(i, obj) {
-				var day = dayOfWeek(obj, options);
-				if (options.offDays.split(',').indexOf(day) === -1) {
-					correct = false;
-				}
+			$.each($('.dp-off'), function (i, obj) {
+				$.each(options.offDays, function (i, offDays) {
+					var day = dayOfWeek(obj, options, offDays);
+					if (offDays.dates.indexOf(day) === -1) {
+						correct = false;
+					}
+				});
 			});
 			return correct;
 		}
 
 		function offDaysShown(options) {
 			var shown = false;
-			$.each($('.dp-item.dp-off'), function(i, obj) {
-				var day = dayOfWeek(obj, options);
-				if (options.offDays.split(',').indexOf(day) !== -1) {
-					shown = true;
-				}
+			$.each($('.dp-item.dp-off'), function (i, obj) {
+				$.each(options.offDays, function (i, offDays) {
+					var day = dayOfWeek(obj, options, offDays);
+					if (offDays.dates.indexOf(day) !== -1) {
+						shown = true;
+					}
+				});
 			});
 			return shown;
 		}
 
 		ok(offDaysCorrect(getOptions(init())), 'Correct off days shown when using default');
-		ok(offDaysCorrect(getOptions(init({offDays:'Mon'}))), 'Correct off days shown when using a single custom value');
-		ok(offDaysCorrect(getOptions(init({offDays:'Mon,Wed,Fri'}))), 'Correct off days shown when using multiple custom values');
-		ok(offDaysCorrect(getOptions(init({offDays:'0,1',offDaysFormat:'d'}))), 'Correct off days shown when using custom offDaysFormat');
+		ok(offDaysCorrect(getOptions(init({offDays:[{dates:['Mon']}]}))), 'Correct off days shown when using a single custom value');
+		ok(offDaysCorrect(getOptions(init({offDays:[{dates:['Mon','Wed','Fri']}]}))), 'Correct off days shown when using multiple custom values');
+		ok(offDaysCorrect(getOptions(init({offDays:[{dates:['0','1'],format:'d'}]}))), 'Correct off days shown when using custom offDaysFormat');
 		ok(offDaysCorrect(getOptions(init({offDays:undefined}))), 'Correct off days shown when offDays set to undefined');
 		ok(offDaysShown(getOptions(init())), 'Off days shown when set as default showOffDays');
 		ok(offDaysShown(getOptions(init({showOffDays:true}))), 'Off days shown when showOffDays set to true');
@@ -209,14 +271,14 @@
 	test('Start of week divider', function () {
 
 		function dayOfWeek(obj, options) {
-			return moment($(obj).attr('data-moment'), options.selectedDateFormat).format(options.startOfWeekFormat);
+			return moment($(obj).attr('data-moment'), options.selectedDateFormat).format(options.startOfWeek.format);
 		}
 		
 		function startOfWeekCorrect(options) {
 			var correct = true;
 			$.each($('.dp-divider'), function(i, obj) {
 				var day = dayOfWeek(obj, options);
-				if (options.startOfWeek.split(',').indexOf(day) === -1) {
+				if (options.startOfWeek.dates.indexOf(day) === -1) {
 					correct = false;
 				}
 			});
@@ -227,7 +289,7 @@
 			var shown = false;
 			$.each($('.dp-item.dp-divider'), function(i, obj) {
 				var day = dayOfWeek(obj, options);
-				if (options.startOfWeek.split(',').indexOf(day) !== -1) {
+				if (options.startOfWeek.dates.indexOf(day) !== -1) {
 					shown = true;
 				}
 			});
@@ -235,9 +297,9 @@
 		}
 
 		ok(startOfWeekCorrect(getOptions(init())), 'Correct start of week shown when using default');
-		ok(startOfWeekCorrect(getOptions(init({startOfWeek:'Wed'}))), 'Correct start of week shown when using a single custom value');
-		ok(startOfWeekCorrect(getOptions(init({startOfWeek:'Fri,Wed'}))), 'Correct start of week shown when using multiple custom values');
-		ok(startOfWeekCorrect(getOptions(init({startOfWeek:'0',startOfWeekFormat:'d'}))), 'Correct start of week shown when using custom startOfWeekFormat');
+		ok(startOfWeekCorrect(getOptions(init({startOfWeek:{dates:['Wed']}}))), 'Correct start of week shown when using a single custom value');
+		ok(startOfWeekCorrect(getOptions(init({startOfWeek:{dates:['Fri','Wed']}}))), 'Correct start of week shown when using multiple custom values');
+		ok(startOfWeekCorrect(getOptions(init({startOfWeek:{dates:['0'],f:'d'}}))), 'Correct start of week shown when using custom startOfWeekFormat');
 		ok(startOfWeekCorrect(getOptions(init({startOfWeek:undefined}))), 'Correct start of week shown when startOfWeek set to undefined');
 		ok(startOfWeekShown(getOptions(init())), 'Start of week divider shown when set as default showStartOfWeek');
 		ok(startOfWeekShown(getOptions(init({showStartOfWeek:true}))), 'Start of week divider shown when showStartOfWeek set to true');
@@ -247,35 +309,35 @@
 	test('Selected date', function () {
 
 		var options = getOptions(init());
-		equal($('.dp-selected').attr('data-moment'), moment().format(options.selectedDateFormat),
+		equal($('.dp-selected').attr('data-moment'), moment().format(options.selectedDate.format),
 			'Correct selectedDate when using default : todays date');
 
-		options = getOptions(init({selectedDate:'2013-10-05'}));
-		equal($('.dp-selected').attr('data-moment'), moment('2013-10-05',options.selectedDateFormat).format(options.selectedDateFormat), //'2013-10-05', 
+		options = getOptions(init({selectedDate:{date:'2013-10-05'}}));
+		equal($('.dp-selected').attr('data-moment'), moment('2013-10-05',options.selectedDate.format).format(options.selectedDate.format), //'2013-10-05', 
 			'Correct selectedDate when set via selectedDate option');
 
-		options = getOptions(init({selectedDate:'05-10-2013',selectedDateFormat:'DD-MM-YYYY'}));
-		equal($('.dp-selected').attr('data-moment'), moment('05-10-2013',options.selectedDateFormat).format(options.selectedDateFormat), //'05-10-2013', 
+		options = getOptions(init({selectedDate:{date:'05-10-2013',f:'DD-MM-YYYY'}}));
+		equal($('.dp-selected').attr('data-moment'), moment('05-10-2013',options.selectedDate.format).format(options.selectedDate.format), //'05-10-2013', 
 			'Correct selectedDate when set via selectedDate using a custom date format');
 		
 		options = getOptions(init().datepaginator('setSelectedDate', '2013-10-06'));
-		equal($('.dp-selected').attr('data-moment'), moment('2013-10-06',options.selectedDateFormat).format(options.selectedDateFormat), //'2013-10-06', 
+		equal($('.dp-selected').attr('data-moment'), moment('2013-10-06',options.selectedDate.format).format(options.selectedDate.format), //'2013-10-06', 
 			'Correct selectedDate when set via setSelectedDate method using default format');
 
-		options = getOptions(init({selectedDateFormat:'DD-MM-YYYY'}).datepaginator('setSelectedDate', '06-10-2013'));
-		equal($('.dp-selected').attr('data-moment'), moment('06-10-2013',options.selectedDateFormat).format(options.selectedDateFormat), //'06-10-2013', 
-			'Correct selectedDate when set via setSelectedDate method using custom selectedDateFormat set via options');
+		options = getOptions(init({selectedDate:{date:'2013-10-05',f:'DD-MM-YYYY'}}).datepaginator('setSelectedDate', '06-10-2013'));
+		equal($('.dp-selected').attr('data-moment'), moment('06-10-2013',options.selectedDate.format).format(options.selectedDate.format), //'06-10-2013', 
+			'Correct selectedDate when set via setSelectedDate method using custom selectedDate.format set via options');
 
 		options = getOptions(init().datepaginator('setSelectedDate', ['06-10-2013', 'DD-MM-YYYY']));
-		equal($('.dp-selected').attr('data-moment'), moment('06-10-2013','DD-MM-YYYY').format(options.selectedDateFormat), //'2013-10-06',
-			'Correct selectedDate when set via setSelectedDate method using custom selectedDateFormat set in method arguments');
+		equal($('.dp-selected').attr('data-moment'), moment('06-10-2013','DD-MM-YYYY').format(options.selectedDate.format), //'2013-10-06',
+			'Correct selectedDate when set via setSelectedDate method using custom selectedDate.format set in method arguments');
 
-		options = getOptions(init({startDate:'2013-12-01',selectedDate:'2013-11-01'}));
-		equal($('.dp-selected').attr('data-moment'), options.startDate.format(options.selectedDateFormat),
+		options = getOptions(init({startDate:'2013-12-01',selectedDate:{date:'2013-11-01'}}));
+		equal($('.dp-selected').attr('data-moment'), options.startDate.date.format(options.selectedDate.format),
 			'Correctly overrides selectedDate when invalid : selectedDate < startDate');
 
-		options = getOptions(init({endDate:'2013-12-31',selectedDate:'2014-01-01'}));
-		equal($('.dp-selected').attr('data-moment'), options.endDate.format(options.selectedDateFormat),
+		options = getOptions(init({endDate:'2013-12-31',selectedDate:{date:'2014-01-01'}}));
+		equal($('.dp-selected').attr('data-moment'), options.endDate.date.format(options.selectedDate.format),
 			'Correctly overrides selectedDate when invalid : selectedDate > endDate');
 	});
 

@@ -1,5 +1,5 @@
 /* =========================================================
- * bootstrap-datepaginator.js v1.1.0
+ * bootstrap-datepaginator.js v1.2.0
  * =========================================================
  * Copyright 2013 Jonathan Miles 
  * Project URL : http://www.jondmiles.com/bootstrap-datepaginator
@@ -31,6 +31,13 @@
 		this._init(options);
 	};
 
+	// Default date formats
+	DatePaginator.formats = {
+		date: 'YYYY-MM-DD',
+		day: 'ddd'
+	};
+
+	// Default plugin options
 	DatePaginator.defaults = {
 
 		injectStyle: true,
@@ -49,46 +56,51 @@
 		highlightSelectedDate: true,
 		highlightToday: true,
 		showCalendar: true,
-		showOffDays: true,
-		showStartOfWeek: true,
 		squareEdges: false,
+		// TODO Override in offDays
+		showOffDays: true,
+		// TODO Override in startOfWeek
+		showStartOfWeek: true,
+
+		dateFormat: DatePaginator.formats.date,
+		dayFormat: DatePaginator.formats.day,
 
 		startDate: {
-			d: moment(new Date(-8640000000000000)),
-			f: 'YYYY-MM-DD'
-		},
-		endDate: {
-			d: moment(new Date(8640000000000000)),
-			f: 'YYYY-MM-DD'
+			date: moment(new Date(-8640000000000000)),
+			format: DatePaginator.formats.date
 		},
 
-		startOfWeek: {
-			d: [ 'Mon' ],
-			f: 'ddd'
+		endDate: {
+			date: moment(new Date(8640000000000000)),
+			format: DatePaginator.formats.date
+		},
+
+		selectedDate: {
+			date: moment().clone().startOf('day'),
+			format: DatePaginator.formats.date
 		},
 
 		offDays: [
 			{
-				d: [ 'Sat', 'Sun' ],
-				f: 'ddd'
+				dates: [ 'Sat', 'Sun' ],
+				format: DatePaginator.formats.day
+				// TODO selectable: false
 			}
 		],
-		
-		selectedDate: moment().clone().startOf('day'),
-		selectedDateFormat: 'YYYY-MM-DD',
-		// selectedDate: {
-		// 	date: moment().clone().startOf('day'),
-		// 	format: 'YYYY-MM-DD'
-		// },
 
+		// TODO Rename periodDividers - accept array as with offDays
+		startOfWeek: {
+			dates: [ 'Mon' ],
+			format: DatePaginator.formats.day
+		},
 
-		onSelectedDateChanged: null,
+		onSelectedDateChanged: null
 	};
 
 	DatePaginator.prototype = {
 
 		setSelectedDate: function(date, format) {
-			this._setSelectedDate(moment(date, format ? format : this.options.selectedDateFormat));
+			this._setSelectedDate(moment(date, format ? format : this.options.selectedDate.format));
 			this._render();
 		},
 
@@ -122,47 +134,6 @@
 				this.options.fillWidth = true;
 			}
 
-
-			// Parse and set start and end dates
-			if (typeof this.options.startDate === 'string') {
-				this.options.startDate = {
-					d: moment(this.options.startDate, this.options.startDateFormat).clone().startOf('day'),
-					f: this.options.startDateFormat
-				};
-			}
-			else if (this.options.startDate.constructor.name === 'Moment') {
-				this.options.startDate = {
-					d: this.options.startDate.clone(),
-					f: this.options.startDateFormat
-				};
-			}
-
-			if (typeof this.options.endDate === 'string') {
-				this.options.endDate = {
-					d: moment(this.options.endDate, this.options.endDateFormat).clone().startOf('day'),
-					f: this.options.endDateFormat
-				};
-			}
-			else if (this.options.endDate.constructor.name === 'Moment') {
-				this.options.endDate = {
-					d: this.options.endDate.clone(),
-					f: this.options.startDateFormat
-				};
-			}
-
-			// Parse, set and validate the initially selected date 
-			// 1. overridding the default value of today
-			if (typeof this.options.selectedDate === 'string') {
-				this.options.selectedDate = moment(this.options.selectedDate, this.options.selectedDateFormat).clone().startOf('day');
-			}
-			// 2. enforce selectedDate with in startDate and endDate range
-			if (this.options.selectedDate.isBefore(this.options.startDate.d)) {
-				this.options.selectedDate = this.options.startDate.d.clone();
-			}
-			if (this.options.selectedDate.isAfter(this.options.endDate.d)) {
-				this.options.selectedDate = this.options.endDate.d.clone();
-			}
-
 			// Parse and nomalize size options
 			if (this.options.size === 'small') {
 				this.options.size = 'sm';
@@ -172,21 +143,98 @@
 			}
 
 
+			// Parse start and end dates 
+			this._shimDateObject('startDate');
+			this._shimDateObject('endDate');
+
+			// Parse, set and validate the initially selected date 
+			// 1. overridding the default value of today 
+			this._shimDateObject('selectedDate');
+			// 2. enforce selectedDate is within start and end date range
+			if (this.options.selectedDate.date.isBefore(this.options.startDate.date)) {
+				this.options.selectedDate.date = this.options.startDate.date.clone();
+			}
+			if (this.options.selectedDate.date.isAfter(this.options.endDate.date)) {
+				this.options.selectedDate.date = this.options.endDate.date.clone();
+			}
+
 
 			// If string startOfWeek then convert to object structure
 			if ((typeof this.options.startOfWeek) === 'string') {
 				this.options.startOfWeek = {
-					d: [ this.options.startOfWeek ],
-					f: (this.options.startOfWeekFormat) ? this.options.startOfWeekFormat : 'ddd'
+					dates: [ this.options.startOfWeek ],
+					format: (this.options.startOfWeekFormat) ? this.options.startOfWeekFormat : 'ddd'
 				};
 			}
+			// this._shimDayObject('startOfWeek');
 
 			// If string offDays then convert to objects structure
 			if ((typeof this.options.offDays) === 'string') {
 				this.options.offDays = [{
-					d: this.options.offDays.split(','),
-					f: (this.options.offDaysFormat) ? this.options.offDaysFormat : 'ddd'
+					dates: this.options.offDays.split(','),
+					format: (this.options.offDaysFormat) ? this.options.offDaysFormat : 'ddd'
 				}];
+			}
+			// this._shimDayObject('offDays');
+		},
+
+		// _shimDayObject: function (option) {
+
+		// 	var format = this.options.dayFormat;
+		// 	if (this.options.hasOwnProperty(option + 'Format')) {
+		// 		format = this.options[option + 'Format'];
+		// 		delete this.options[option + 'Format'];
+		// 	}
+
+		// 	if (typeof this.options[option] === 'string') {
+		// 		this.options[option] = {
+		// 			d: [ this.options[option].split(',') ],
+		// 			f: format
+		// 		};
+		// 	}
+		// },
+
+		_shimDateObject: function (option) {
+
+			var format = this.options.dateFormat;
+			if (this.options.hasOwnProperty(option + 'Format')) {
+				format = this.options[option + 'Format'];
+				delete this.options[option + 'Format'];
+			}
+
+			if ((typeof this.options[option]) === 'string') {
+
+				// start date as string, check we've got a start date format required to parse
+				this.options[option] = {
+					date: moment(this.options[option], format).clone().startOf('day'),
+					format: format
+				};
+			}
+			else if (typeof this.options[option] === 'object') {
+
+				if (this.options[option].constructor.name === 'Moment') {
+
+					// got moment, shim into object
+					this.options[option] = {
+						date: this.options[option].clone().startOf('day'),
+						format: format
+					};
+				}
+				else if (this.options[option].hasOwnProperty('date') &&
+						(typeof this.options[option].date === 'string')) {
+
+					// almost right, parse date string into moment
+					if (this.options[option].hasOwnProperty('format')) {
+						format = this.options[option].format;
+					}
+					this.options[option].date = moment(this.options[option].date, format).clone().startOf('day');
+					this.options[option].format = format;
+				}
+				else if (this.options[option].hasOwnProperty('date') &&
+					(this.options[option].constructor.name === 'Moment')) {
+
+					this.options[option].date = this.options[option].date.startOf('day');
+				}
 			}
 		},
 
@@ -249,31 +297,31 @@
 
 		_setSelectedDate: function(selectedDate) {
 
-			if ((!selectedDate.isSame(this.options.selectedDate)) &&
-					(!selectedDate.isBefore(this.options.startDate.d)) &&
-					(!selectedDate.isAfter(this.options.endDate.d))) {
+			if ((!selectedDate.isSame(this.options.selectedDate.date)) &&
+					(!selectedDate.isBefore(this.options.startDate.date)) &&
+					(!selectedDate.isAfter(this.options.endDate.date))) {
 				
-				this.options.selectedDate = selectedDate.startOf('day');
+				this.options.selectedDate.date = selectedDate.startOf('day');
 				this.$element.trigger('selectedDateChanged', [selectedDate.clone()]);
 			}
 		},
 
 		_back: function () {
-			this._setSelectedDate(this.options.selectedDate.clone().subtract('day', 1));
+			this._setSelectedDate(this.options.selectedDate.date.clone().subtract('day', 1));
 			this._render();
 		},
 
 		_forward: function () {
-			this._setSelectedDate(this.options.selectedDate.clone().add('day', 1));
+			this._setSelectedDate(this.options.selectedDate.date.clone().add('day', 1));
 			this._render();
-	    },
+		},
 
-	    _select: function(date) {
-			this._setSelectedDate(moment(date, this.options.selectedDateFormat));
+		_select: function(date) {
+			this._setSelectedDate(moment(date, this.options.selectedDate.format));
 			this._render();
-	    },
+		},
 
-	    _calendarSelect: function(event) {
+		_calendarSelect: function(event) {
 			this._setSelectedDate(moment(event.date));
 			this._render();
 		},
@@ -395,11 +443,11 @@
 						minView: 0, //2
 						// todayBtn: true,
 						todayHighlight: true,
-						startDate: this.options.startDate.d.toDate(),
-						endDate: this.options.endDate.d.toDate()
-			        })
-			        .datepicker('update', this.options.selectedDate.toDate())
-			        .on('changeDate', $.proxy(this._calendarSelect, this));
+						startDate: this.options.startDate.date.toDate(),
+						endDate: this.options.endDate.date.toDate()
+					})
+					.datepicker('update', this.options.selectedDate.date.toDate())
+					.on('changeDate', $.proxy(this._calendarSelect, this));
 			}
 		},
 
@@ -417,12 +465,12 @@
 				unitsPerSide = parseInt(units / 2),
 				adjustedItemWidth = Math.floor(viewWidth / units),
 				adjustedSelectedItemWidth = Math.floor(this.options.selectedItemWidth + (viewWidth - (units * adjustedItemWidth))),
-				start = this.options.selectedDate.clone().subtract('days', unitsPerSide),
-				end = this.options.selectedDate.clone().add('days', (units - unitsPerSide));
+				start = this.options.selectedDate.date.clone().subtract('days', unitsPerSide),
+				end = this.options.selectedDate.date.clone().add('days', (units - unitsPerSide));
 
 			var data = {
-				isSelectedStartDate: this.options.selectedDate.isSame(this.options.startDate.d) ? true : false,
-				isSelectedEndDate: this.options.selectedDate.isSame(this.options.endDate.d) ? true : false,
+				isSelectedStartDate: this.options.selectedDate.date.isSame(this.options.startDate.date) ? true : false,
+				isSelectedEndDate: this.options.selectedDate.date.isSame(this.options.endDate.date) ? true : false,
 				items: []
 			};
 
@@ -435,7 +483,7 @@
 					isToday = this._isToday(m);
 				
 				data.items[data.items.length] = {
-					m: m.clone().format(this.options.selectedDateFormat),
+					m: m.clone().format(this.options.selectedDate.format),
 					isValid: isValid,
 					isSelected: isSelected,
 					isOffDay: isOffDay,
@@ -452,8 +500,8 @@
 
 		_isValidDate: function (m) {
 
-			if ((m.isSame(this.options.startDate.d) || m.isAfter(this.options.startDate.d)) &&
-					(m.isSame(this.options.endDate.d) || m.isBefore(this.options.endDate.d))) {
+			if ((m.isSame(this.options.startDate.date) || m.isAfter(this.options.startDate.date)) &&
+					(m.isSame(this.options.endDate.date) || m.isBefore(this.options.endDate.date))) {
 				return true;
 			}
 			else {
@@ -463,7 +511,7 @@
 
 		_isSelectedDate: function (m) {
 
-			return m.isSame(this.options.selectedDate);
+			return m.isSame(this.options.selectedDate.date);
 		},
 
 		_isToday: function (m) {
@@ -478,8 +526,8 @@
 
 		_isStartOfWeek: function (m) {
 
-			var formattedDate = m.format(this.options.startOfWeek.f);
-			if (this.options.startOfWeek.d.indexOf(formattedDate) !== -1) {
+			var formattedDate = m.format(this.options.startOfWeek.format);
+			if (this.options.startOfWeek.dates.indexOf(formattedDate) !== -1) {
 				return true;
 			}
 			return false;
@@ -489,7 +537,7 @@
 
 			var result = false;
 			$.each(this.options.offDays, function (index, offDays) {
-				if (offDays.d.indexOf(m.format(offDays.f)) !== -1) {
+				if (offDays.dates.indexOf(m.format(offDays.format)) !== -1) {
 					result = true;
 					return;
 				}
