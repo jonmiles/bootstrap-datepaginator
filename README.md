@@ -123,11 +123,40 @@ Object.  Default: 'Sat,Sun'
 
 Sets days of the week to be considered off days, visually greyed out.
 
-Example
+Basic usage
 
 	offDays: [{
 		dates: [ 'Sat', 'Sun' ],
 		format: 'ddd'
+	}]
+
+To disable off days so they can not be selected.
+
+	offDays: [{
+		dates: [ 'Sat', 'Sun' ],
+		format: 'ddd',
+		disable: true
+	}]
+
+To disable off days and provide a custom message.
+
+	offDays: [{
+		dates: [ 'Sat', 'Sun' ],
+		format: 'ddd',
+		disable: {
+			hint: 'My custom message'
+		}
+	}]
+
+To define multiple off day sets e.g. regularly occurring days such as weekends alongside regular holidays such as Christmas.
+
+	offDays: [{
+		dates: [ 'Sat', 'Sun' ],
+		format: 'ddd'
+	},
+	{
+		dates: [ '2013-12-25' ],
+		format: 'YYYY-MM-DD'
 	}]
 
 ### offDaysFormat

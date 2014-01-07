@@ -28,7 +28,7 @@
 		equal(options.injectStyle, true, 'injectStyle default ok');
 		equal(options.itemWidth, 35, 'itemWidth default ok');
 		equal(options.navItemWidth, 20, 'navItemWidth default ok');
-		deepEqual(options.offDays, [{ dates: ['Sat', 'Sun'], format: 'ddd' }], 'offDays default ok');
+		deepEqual(options.offDays, [{ dates: ['Sat', 'Sun'], format: 'ddd', disable: false }], 'offDays default ok');
 		equal(options.onSelectedDateChanged, null, 'onSelectedDateChanged default ok');
 		equal(options.selectedDate.date.format('YYYY-MM-DD'), moment().startOf('day').format('YYYY-MM-DD'), 'selectedDate default ok');
 		equal(options.selectedDate.format, 'YYYY-MM-DD', 'selectedDateFormat default ok');
@@ -407,7 +407,7 @@
 	});
 
 	function getSelectedDateAsMoment(options) {
-		return moment($('.dp-selected').attr('data-moment'), options.selectedDateFormat);
+		return moment($('.dp-selected').attr('data-moment'), options.selectedDate.format);
 	}
 
 	test('Navigate backwards', function () {
@@ -415,7 +415,7 @@
 		// Test valid navigation
 		var options = getOptions(init()),
 			selectedDate = getSelectedDateAsMoment(options);
-		$('a .dp-nav-left').trigger('click');
+		$('.dp-nav-left').trigger('click');
 		ok(getSelectedDateAsMoment(options).isSame(selectedDate.clone().subtract('day', 1)),
 			'Navigate backwards moves back 1 day');
 
@@ -432,7 +432,7 @@
 		// Test valid navigation
 		var options = getOptions(init()),
 			selectedDate = getSelectedDateAsMoment(options);
-		$('a .dp-nav-right').trigger('click');
+		$('.dp-nav-right').trigger('click');
 		ok(getSelectedDateAsMoment(options).isSame(selectedDate.clone().add('day', 1)),
 			'Navigate forwards moves forward 1 day');
 

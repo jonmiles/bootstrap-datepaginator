@@ -57,9 +57,7 @@
 		highlightToday: true,
 		showCalendar: true,
 		squareEdges: false,
-		// TODO Override in offDays
 		showOffDays: true,
-		// TODO Override in startOfWeek
 		showStartOfWeek: true,
 
 		dateFormat: DatePaginator.formats.date,
@@ -83,8 +81,8 @@
 		offDays: [
 			{
 				dates: [ 'Sat', 'Sun' ],
-				format: DatePaginator.formats.day
-				// TODO selectable: false
+				format: DatePaginator.formats.day,
+				disable: false
 			}
 		],
 
@@ -281,16 +279,21 @@
 		},
 
 		_clickedHandler: function(event) {
+
 			event.preventDefault();
-			var target = $(event.target);
-			var classList = target.attr('class');
-			if (classList.indexOf('dp-nav-left') != -1) {
-				this._back();
+			var target = $(event.target).closest('a');
+			var classList = target.attr('class') ? target.attr('class').split(' ') : [];
+
+			if (classList.indexOf('dp-no-select') !== -1) {
+				// do nothing
 			}
-			else if (classList.indexOf('dp-nav-right') != -1) {
-				this._forward();
+			else if (classList.indexOf('dp-nav-left') !== -1) {
+				this._navBack();
 			}
-			else if (classList.indexOf('dp-item') != -1) {
+			else if (classList.indexOf('dp-nav-right') !== -1) {
+				this._navForward();
+			}
+			else if (classList.indexOf('dp-item') !== -1) {
 				this._select(target.attr('data-moment'));
 			}
 		},
@@ -306,27 +309,69 @@
 			}
 		},
 
-		_back: function () {
-			this._setSelectedDate(this.options.selectedDate.date.clone().subtract('day', 1));
-			this._render();
+		_next: function (m, fn) {
+
+			var tmp = m,
+				next,
+				offDay,
+				inRange = true;
+
+			do {
+				// get next date
+				tmp = fn(tmp);
+				offDay = this._isOffDay(tmp);
+				inRange = this._inRange(tmp);
+				// check date valid and in range
+				if ((!offDay || !offDay.disable) && inRange) {
+					next = tmp;
+					break;
+				}
+			}
+			while (inRange);
+
+			return next;
 		},
 
-		_forward: function () {
-			this._setSelectedDate(this.options.selectedDate.date.clone().add('day', 1));
-			this._render();
+		_back: function (m) {
+			return m.clone().subtract('day', 1);
+		},
+
+		_forward: function (m) {
+			return m.clone().add('day', 1);
+		},
+
+		_navBack: function () {
+			
+			var next = this._next(this.options.selectedDate.date, this._back);
+			if (next) {
+				this._setSelectedDate(next);
+				this._render();
+			}
+		},
+
+		_navForward: function () {
+
+			var next = this._next(this.options.selectedDate.date, this._forward);
+			if (next) {
+				this._setSelectedDate(next);
+				this._render();
+			}
 		},
 
 		_select: function(date) {
+
 			this._setSelectedDate(moment(date, this.options.selectedDate.format));
 			this._render();
 		},
 
 		_calendarSelect: function(event) {
+
 			this._setSelectedDate(moment(event.date));
 			this._render();
 		},
 
 		_resize: function () {
+
 			this.options.width = this.$element.width();
 			this._render();
 		},
@@ -347,16 +392,14 @@
 					.addClass(this.options.size === 'sm' ? 'dp-nav-sm' : this.options.size === 'lg' ? 'dp-nav-lg' : '')
 					.addClass(this.options.squareEdges ? 'dp-nav-square-edges' : '')
 					.append($(this._template.icon)
-						.addClass('glyphicon-chevron-left')
-						.addClass('dp-nav-left'))
+						.addClass('glyphicon-chevron-left'))
 					.width(this.options.navItemWidth);
 				this.$rightNav = $(this._template.navItem)
 					.addClass('dp-nav-right')
 					.addClass(this.options.size === 'sm' ? 'dp-nav-sm' : this.options.size === 'lg' ? 'dp-nav-lg' : '')
 					.addClass(this.options.squareEdges ? 'dp-nav-square-edges' : '')
 					.append($(this._template.icon)
-						.addClass('glyphicon-chevron-right')
-						.addClass('dp-nav-right'))
+						.addClass('glyphicon-chevron-right'))
 					.width(this.options.navItemWidth);
 				this.$calendar = this.options.showCalendar ? $(this._template.calendar) : undefined;
 				this._injectStyle();
@@ -378,10 +421,10 @@
 			this.$leftNav
 				.removeClass('dp-no-select')
 				.attr('title', '');
-			if (data.isSelectedStartDate) {
+			if (data.startOfRange) {
 				this.$leftNav
 					.addClass('dp-no-select')
-					.attr('title', 'Start of valid date range');
+					.attr('title', 'Start of Range');
 			}
 			this.$wrapper.append($(self._template.listItem).append(this.$leftNav));
 
@@ -404,6 +447,9 @@
 				}
 				if (item.isOffDay && self.options.showOffDays) {
 					$a.addClass('dp-off');
+					if (item.isOffDay.disable) {
+						$a.addClass('dp-no-select');
+					}
 				}
 				if (item.isSelected && self.options.showCalendar) {
 					$a.append(self.$calendar);
@@ -414,7 +460,7 @@
 				else if (self.options.size === 'lg') {
 					$a.addClass('dp-item-lg');
 				}
-				if (!item.isValid) {
+				if (!item.inRange) {
 					$a.addClass('dp-no-select');
 				}
 				$a.append(item.text);
@@ -426,10 +472,10 @@
 			this.$rightNav
 				.removeClass('dp-no-select')
 				.attr('title', '');
-			if (data.isSelectedEndDate) {
+			if (data.endOfRange) {
 				this.$rightNav
 					.addClass('dp-no-select')
-					.attr('title', 'End of valid date range');
+					.attr('title', 'End of Range');
 			}
 			this.$wrapper.append($(self._template.listItem).append(this.$rightNav));
 
@@ -469,28 +515,28 @@
 				end = this.options.selectedDate.date.clone().add('days', (units - unitsPerSide));
 
 			var data = {
-				isSelectedStartDate: this.options.selectedDate.date.isSame(this.options.startDate.date) ? true : false,
-				isSelectedEndDate: this.options.selectedDate.date.isSame(this.options.endDate.date) ? true : false,
+				startOfRange: this._next(this.options.selectedDate.date, this._back) ? false : true,
+				endOfRange: this._next(this.options.selectedDate.date, this._forward) ? false : true,
 				items: []
 			};
 
 			for (var m = start; m.isBefore(end); m.add('days', 1)) {
 
-				var isValid = this._isValidDate(m),
+				var inRange = this._inRange(m),
 					isSelected = this._isSelectedDate(m),
-					isOffDay = this._isOffDay(m),
+					isToday = this._isToday(m),
 					isStartOfWeek = this._isStartOfWeek(m),
-					isToday = this._isToday(m);
-				
+					isOffDay = this._isOffDay(m);
+
 				data.items[data.items.length] = {
 					m: m.clone().format(this.options.selectedDate.format),
-					isValid: isValid,
+					inRange: inRange,
 					isSelected: isSelected,
 					isOffDay: isOffDay,
 					isStartOfWeek: isStartOfWeek,
 					isToday: isToday,
-					text: isSelected ? m.format(this.options.textSelected) : m.format(this.options.text),
-					hint: isValid ? m.format(this.options.hint) : 'Invalid date',
+					text: this._formatText(m, isSelected),
+					hint: this._formatHint(m, inRange, isOffDay),
 					itemWidth: isSelected ? adjustedSelectedItemWidth : adjustedItemWidth
 				};
 			}
@@ -498,7 +544,28 @@
 			return data;
 		},
 
-		_isValidDate: function (m) {
+		_formatText: function (m, isSelected) {
+
+			var text = m.format(this.options.text);
+			if (isSelected) {
+				text = m.format(this.options.textSelected);
+			}
+			return text;
+		},
+
+		_formatHint: function (m, inRange, isOffDay) {
+
+			var hint = m.format(this.options.hint);
+			if (!inRange) {
+				hint = 'Out of Range';
+			}
+			else if (isOffDay && isOffDay.disable) {
+				hint = isOffDay.disable.hint ? isOffDay.disable.hint : 'Disabled';
+			}
+			return hint;
+		},
+
+		_inRange: function (m) {
 
 			if ((m.isSame(this.options.startDate.date) || m.isAfter(this.options.startDate.date)) &&
 					(m.isSame(this.options.endDate.date) || m.isBefore(this.options.endDate.date))) {
@@ -533,12 +600,14 @@
 			return false;
 		},
 
+		// If an off day then we also need it's options i.e. selectable,
+		// so we'll return the offDays object itself
 		_isOffDay: function (m) {
 
 			var result = false;
 			$.each(this.options.offDays, function (index, offDays) {
 				if (offDays.dates.indexOf(m.format(offDays.format)) !== -1) {
-					result = true;
+					result = offDays;
 					return;
 				}
 			});
@@ -554,7 +623,7 @@
 			calendar: '<i id="dp-calendar" class="glyphicon glyphicon-calendar"></i>'
 		},
 
-		_css: '.datepaginator{font-size:12px;height:60px}.datepaginator-sm{font-size:10px;height:40px}.datepaginator-lg{font-size:14px;height:80px}.pagination{margin:0;padding:0;white-space:nowrap}.dp-nav{height:60px;padding:22px 0!important;width:20px;margin:0!important;text-align:center}.dp-nav-square-edges{border-radius:0!important}.dp-item{height:60px;padding:13px 0!important;width:35px;margin:0!important;border-left-style:hidden!important;text-align:center}.dp-item-sm{height:40px!important;padding:5px!important}.dp-item-lg{height:80px!important;padding:22px 0!important}.dp-nav-sm{height:40px!important;padding:11px 0!important}.dp-nav-lg{height:80px!important;padding:33px 0!important}a.dp-nav-right{border-left-style:hidden!important}.dp-divider{border-left:2px solid #ddd!important}.dp-off{background-color:#F0F0F0!important}.dp-no-select{color:#ccc!important;background-color:#F0F0F0!important}.dp-no-select:hover{background-color:#F0F0F0!important}.dp-today{background-color:#88B5DB!important;color:#fff!important}.dp-selected{background-color:#428bca!important;color:#fff!important;width:140px}#dp-calendar{padding:3px 5px 0 0!important;margin-right:3px;position:absolute;right:0;top:10}'
+		_css: '.datepaginator{font-size:12px;height:60px}.datepaginator-sm{font-size:10px;height:40px}.datepaginator-lg{font-size:14px;height:80px}.pagination{margin:0;padding:0;white-space:nowrap}.dp-nav{height:60px;padding:22px 0!important;width:20px;margin:0!important;text-align:center}.dp-nav-square-edges{border-radius:0!important}.dp-item{height:60px;padding:13px 0!important;width:35px;margin:0!important;border-left-style:hidden!important;text-align:center}.dp-item-sm{height:40px!important;padding:5px!important}.dp-item-lg{height:80px!important;padding:22px 0!important}.dp-nav-sm{height:40px!important;padding:11px 0!important}.dp-nav-lg{height:80px!important;padding:33px 0!important}a.dp-nav-right{border-left-style:hidden!important}.dp-divider{border-left:2px solid #ddd!important}.dp-off{background-color:#F0F0F0!important}.dp-no-select{color:#ccc!important;background-color:#F0F0F0!important}.dp-today{background-color:#88B5DB!important;color:#fff!important}.dp-selected{background-color:#428bca!important;color:#fff!important;width:140px}#dp-calendar{padding:3px 5px 0 0!important;margin-right:3px;position:absolute;right:0;top:10}'
 	};
 
 	var logError = function(message) {
@@ -584,7 +653,8 @@
 			}
 			else {
 				if (!self) {
-					$.data(this, 'plugin_' + pluginName, new DatePaginator(this, options));
+					$.data(this, 'plugin_' + pluginName,
+							new DatePaginator(this, $.extend(true, {}, options)));
 				}
 				else {
 					self._init(options);
