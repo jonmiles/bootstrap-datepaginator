@@ -24,6 +24,11 @@
       <br/>
       <h2>Disable off days with custom onhover hint</h2>
       <div id="paginator-disable-off-days-custom-hint"></div>
+      <br/>      
+      <h2>Method: getSelectedDate</h2>
+      <div id="paginator-get-selected-date"></div>
+      <fieldset>
+      <button type="button" id="button-get-selected-date" class="btn">Get Selected Date</button></fieldset>
       <br/>
       <br/>
       <br/>
@@ -91,6 +96,16 @@
           }]
         }
         $('#paginator-disable-off-days-custom-hint').datepaginator(options);
+
+        $('#paginator-get-selected-date').datepaginator({});
+        $('#button-get-selected-date').on('click', function (e) {
+
+          var selectedDate = function (date) {
+            console.log(date.format('YYYY-MM-DD'));
+          };
+          $('#paginator-get-selected-date').datepaginator('getSelectedDate', [selectedDate]);
+        });
+
   		});
   	</script>
   </body>

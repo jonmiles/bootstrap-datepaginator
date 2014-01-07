@@ -257,15 +257,23 @@ By default the paginator will automatically fill the entire width of it's contai
 
 ## Methods
 
+### getSelectedDate
+
+Gets the selected date from the paginator via a function callback.
+
+	$('#paginator').datepaginator('getSelectedDate', function (date) {
+		// Your logic goes here
+	});
+
 ### setSelectedDate
 
 Sets the selected date, triggering a refresh to reflect the new state.
 
 	$('#paginator').datepaginator('setSelectedDate', ['2013-10-05', 'YYYY-MM-DD']);
 
-If called without passing a format argument, selectedDateFormat will be used.
+If called without passing a format argument, selectedDate.format will be used.
 
-	$('#paginator').datepaginator('setSelectedDate', '2013-10-05');
+	$('#paginator').datepaginator('setSelectedDate', ['2013-10-05']);
 
 ### remove
 

@@ -97,7 +97,15 @@
 
 	DatePaginator.prototype = {
 
-		setSelectedDate: function(date, format) {
+		getSelectedDate: function (cb) {
+
+			if (typeof cb === 'function') {
+				cb(this.options.selectedDate.date.clone());
+			}
+		},
+
+		setSelectedDate: function (date, format) {
+
 			this._setSelectedDate(moment(date, format ? format : this.options.selectedDate.format));
 			this._render();
 		},
@@ -111,7 +119,7 @@
 			$.removeData(this, 'plugin_' + pluginName);
 		},
 
-		_init: function(options) {
+		_init: function (options) {
 
 			this.options = $.extend({}, DatePaginator.defaults, options);
 			this._normalizeOptions();
@@ -120,7 +128,7 @@
 			this._render();
 		},
 
-		_normalizeOptions: function() {
+		_normalizeOptions: function () {
 
 			// If no width provided, default to fill full width
 			// this.options.width = this.options.width ? this.options.width : this.$element.width();
@@ -278,7 +286,7 @@
 			this.initialized = false;
 		},
 
-		_clickedHandler: function(event) {
+		_clickedHandler: function (event) {
 
 			event.preventDefault();
 			var target = $(event.target).closest('a');
@@ -298,7 +306,7 @@
 			}
 		},
 
-		_setSelectedDate: function(selectedDate) {
+		_setSelectedDate: function (selectedDate) {
 
 			if ((!selectedDate.isSame(this.options.selectedDate.date)) &&
 					(!selectedDate.isBefore(this.options.startDate.date)) &&
@@ -358,13 +366,13 @@
 			}
 		},
 
-		_select: function(date) {
+		_select: function (date) {
 
 			this._setSelectedDate(moment(date, this.options.selectedDate.format));
 			this._render();
 		},
 
-		_calendarSelect: function(event) {
+		_calendarSelect: function (event) {
 
 			this._setSelectedDate(moment(event.date));
 			this._render();
@@ -429,7 +437,7 @@
 			this.$wrapper.append($(self._template.listItem).append(this.$leftNav));
 
 			// Items
-			$.each(data.items, function(id, item) {
+			$.each(data.items, function (id, item) {
 
 				var $a = $(self._template.dateItem)
 					.attr('data-moment', item.m)
@@ -626,7 +634,7 @@
 		_css: '.datepaginator{font-size:12px;height:60px}.datepaginator-sm{font-size:10px;height:40px}.datepaginator-lg{font-size:14px;height:80px}.pagination{margin:0;padding:0;white-space:nowrap}.dp-nav{height:60px;padding:22px 0!important;width:20px;margin:0!important;text-align:center}.dp-nav-square-edges{border-radius:0!important}.dp-item{height:60px;padding:13px 0!important;width:35px;margin:0!important;border-left-style:hidden!important;text-align:center}.dp-item-sm{height:40px!important;padding:5px!important}.dp-item-lg{height:80px!important;padding:22px 0!important}.dp-nav-sm{height:40px!important;padding:11px 0!important}.dp-nav-lg{height:80px!important;padding:33px 0!important}a.dp-nav-right{border-left-style:hidden!important}.dp-divider{border-left:2px solid #ddd!important}.dp-off{background-color:#F0F0F0!important}.dp-no-select{color:#ccc!important;background-color:#F0F0F0!important}.dp-today{background-color:#88B5DB!important;color:#fff!important}.dp-selected{background-color:#428bca!important;color:#fff!important;width:140px}#dp-calendar{padding:3px 5px 0 0!important;margin-right:3px;position:absolute;right:0;top:10}'
 	};
 
-	var logError = function(message) {
+	var logError = function (message) {
         if(window.console) {
             window.console.error(message);
         }
@@ -634,14 +642,15 @@
 
 	// Prevent against multiple instantiations,
 	// handle updates and method calls
-	$.fn[pluginName] = function(options, args) {
+	$.fn[pluginName] = function (options, args) {
+
 		return this.each(function () {
 			var self = $.data(this, 'plugin_' + pluginName);
 			if (typeof options === 'string') {
 				if (!self) {
 					logError('Not initialized, can not call method : ' + options);
 				}
-				else if (!$.isFunction(self[options]) || options.charAt(0) === '_') {
+				else if (!$.isFunction (self[options]) || options.charAt(0) === '_') {
 					logError('No such method : ' + options);
 				}
 				else {
