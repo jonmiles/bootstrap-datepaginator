@@ -57,8 +57,6 @@
 		highlightToday: true,
 		showCalendar: true,
 		squareEdges: false,
-		showOffDays: true,
-		showStartOfWeek: true,
 
 		dateFormat: DatePaginator.formats.date,
 		dayFormat: DatePaginator.formats.day,
@@ -86,11 +84,12 @@
 			}
 		],
 
-		// TODO Rename periodDividers - accept array as with offDays
-		startOfWeek: {
-			dates: [ 'Mon' ],
-			format: DatePaginator.formats.day
-		},
+		periodSeparators: [
+			{
+				dates: [ 'Mon' ],
+				format: DatePaginator.formats.day
+			}
+		],
 
 		onSelectedDateChanged: null
 	};
@@ -148,7 +147,6 @@
 				this.options.size = 'lg';
 			}
 
-
 			// Parse start and end dates 
 			this._shimDateObject('startDate');
 			this._shimDateObject('endDate');
@@ -164,16 +162,6 @@
 				this.options.selectedDate.date = this.options.endDate.date.clone();
 			}
 
-
-			// If string startOfWeek then convert to object structure
-			if ((typeof this.options.startOfWeek) === 'string') {
-				this.options.startOfWeek = {
-					dates: [ this.options.startOfWeek ],
-					format: (this.options.startOfWeekFormat) ? this.options.startOfWeekFormat : 'ddd'
-				};
-			}
-			// this._shimDayObject('startOfWeek');
-
 			// If string offDays then convert to objects structure
 			if ((typeof this.options.offDays) === 'string') {
 				this.options.offDays = [{
@@ -181,24 +169,16 @@
 					format: (this.options.offDaysFormat) ? this.options.offDaysFormat : 'ddd'
 				}];
 			}
-			// this._shimDayObject('offDays');
+
+			// If string startOfWeek then convert to object structure
+			if (this.options.startOfWeek && (typeof this.options.startOfWeek === 'string')) {
+				this.options.periodSeparators = [{
+					dates: [ this.options.startOfWeek ],
+					format: (this.options.startOfWeekFormat) ? this.options.startOfWeekFormat : 'ddd'
+				}];
+				delete this.options.startOfWeek;
+			}
 		},
-
-		// _shimDayObject: function (option) {
-
-		// 	var format = this.options.dayFormat;
-		// 	if (this.options.hasOwnProperty(option + 'Format')) {
-		// 		format = this.options[option + 'Format'];
-		// 		delete this.options[option + 'Format'];
-		// 	}
-
-		// 	if (typeof this.options[option] === 'string') {
-		// 		this.options[option] = {
-		// 			d: [ this.options[option].split(',') ],
-		// 			f: format
-		// 		};
-		// 	}
-		// },
 
 		_shimDateObject: function (option) {
 
@@ -450,17 +430,14 @@
 				if (item.isToday && self.options.highlightToday) {
 					$a.addClass('dp-today');
 				}
-				if (item.isStartOfWeek && self.options.showStartOfWeek) {
-					$a.addClass('dp-divider');
-				}
-				if (item.isOffDay && self.options.showOffDays) {
+				if (item.isOffDay) {
 					$a.addClass('dp-off');
 					if (item.isOffDay.disable) {
 						$a.addClass('dp-no-select');
 					}
 				}
-				if (item.isSelected && self.options.showCalendar) {
-					$a.append(self.$calendar);
+				if (item.isSeparator) {
+					$a.addClass('dp-separator');
 				}
 				if (self.options.size === 'sm') {
 					$a.addClass('dp-item-sm');
@@ -471,6 +448,11 @@
 				if (!item.inRange) {
 					$a.addClass('dp-no-select');
 				}
+
+				if (item.isSelected && self.options.showCalendar) {
+					$a.append(self.$calendar);
+				}
+				
 				$a.append(item.text);
 
 				self.$wrapper.append($(self._template.listItem).append($a));
@@ -533,16 +515,16 @@
 				var inRange = this._inRange(m),
 					isSelected = this._isSelectedDate(m),
 					isToday = this._isToday(m),
-					isStartOfWeek = this._isStartOfWeek(m),
-					isOffDay = this._isOffDay(m);
+					isOffDay = this._isOffDay(m),
+					isSeparator = this._isSeparator(m);
 
 				data.items[data.items.length] = {
 					m: m.clone().format(this.options.selectedDate.format),
 					inRange: inRange,
 					isSelected: isSelected,
-					isOffDay: isOffDay,
-					isStartOfWeek: isStartOfWeek,
 					isToday: isToday,
+					isOffDay: isOffDay,
+					isSeparator: isSeparator,
 					text: this._formatText(m, isSelected),
 					hint: this._formatHint(m, inRange, isOffDay),
 					itemWidth: isSelected ? adjustedSelectedItemWidth : adjustedItemWidth
@@ -599,13 +581,16 @@
 			}
 		},
 
-		_isStartOfWeek: function (m) {
+		_isSeparator: function (m) {
 
-			var formattedDate = m.format(this.options.startOfWeek.format);
-			if (this.options.startOfWeek.dates.indexOf(formattedDate) !== -1) {
-				return true;
-			}
-			return false;
+			var result = false;
+			$.each(this.options.periodSeparators, function (index, separators) {
+				if (separators.dates.indexOf(m.format(separators.format)) !== -1) {
+					result = separators;
+					return;
+				}
+			});
+			return result;
 		},
 
 		// If an off day then we also need it's options i.e. selectable,
@@ -631,7 +616,7 @@
 			calendar: '<i id="dp-calendar" class="glyphicon glyphicon-calendar"></i>'
 		},
 
-		_css: '.datepaginator{font-size:12px;height:60px}.datepaginator-sm{font-size:10px;height:40px}.datepaginator-lg{font-size:14px;height:80px}.pagination{margin:0;padding:0;white-space:nowrap}.dp-nav{height:60px;padding:22px 0!important;width:20px;margin:0!important;text-align:center}.dp-nav-square-edges{border-radius:0!important}.dp-item{height:60px;padding:13px 0!important;width:35px;margin:0!important;border-left-style:hidden!important;text-align:center}.dp-item-sm{height:40px!important;padding:5px!important}.dp-item-lg{height:80px!important;padding:22px 0!important}.dp-nav-sm{height:40px!important;padding:11px 0!important}.dp-nav-lg{height:80px!important;padding:33px 0!important}a.dp-nav-right{border-left-style:hidden!important}.dp-divider{border-left:2px solid #ddd!important}.dp-off{background-color:#F0F0F0!important}.dp-no-select{color:#ccc!important;background-color:#F0F0F0!important}.dp-today{background-color:#88B5DB!important;color:#fff!important}.dp-selected{background-color:#428bca!important;color:#fff!important;width:140px}#dp-calendar{padding:3px 5px 0 0!important;margin-right:3px;position:absolute;right:0;top:10}'
+		_css: '.datepaginator{font-size:12px;height:60px}.datepaginator-sm{font-size:10px;height:40px}.datepaginator-lg{font-size:14px;height:80px}.pagination{margin:0;padding:0;white-space:nowrap}.dp-nav{height:60px;padding:22px 0!important;width:20px;margin:0!important;text-align:center}.dp-nav-square-edges{border-radius:0!important}.dp-item{height:60px;padding:13px 0!important;width:35px;margin:0!important;border-left-style:hidden!important;text-align:center}.dp-item-sm{height:40px!important;padding:5px!important}.dp-item-lg{height:80px!important;padding:22px 0!important}.dp-nav-sm{height:40px!important;padding:11px 0!important}.dp-nav-lg{height:80px!important;padding:33px 0!important}a.dp-nav-right{border-left-style:hidden!important}.dp-separator{border-left:2px solid #ddd!important}.dp-off{background-color:#F0F0F0!important}.dp-no-select{color:#ccc!important;background-color:#F0F0F0!important}.dp-today{background-color:#88B5DB!important;color:#fff!important}.dp-selected{background-color:#428bca!important;color:#fff!important;width:140px}#dp-calendar{padding:3px 5px 0 0!important;margin-right:3px;position:absolute;right:0;top:10}'
 	};
 
 	var logError = function (message) {

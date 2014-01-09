@@ -1,5 +1,5 @@
 /* =========================================================
- * bootstrap-datepaginator.css v1.1.0
+ * bootstrap-datepaginator.css v1.2.0
  * =========================================================
  * Copyright 2013 Jonathan Miles 
  * Project URL : http://www.jondmiles.com/bootstrap-datepaginator
@@ -84,7 +84,7 @@ a.dp-nav-right {
 	border-left-style: hidden !important;
 }
 
-.dp-divider {
+.dp-separator {
 	border-left: 2px solid #ddd !important;
 }
 

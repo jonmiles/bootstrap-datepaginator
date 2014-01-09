@@ -119,7 +119,7 @@ Integer. Default: 20
 Minimum width specified in pixels for the nav items e.g. left and right arrows
 
 ### offDays
-Object.  Default: 'Sat,Sun'
+Object Array.  Default: 'Sat,Sun'
 
 Sets days of the week to be considered off days, visually greyed out.
 
@@ -162,6 +162,30 @@ To define multiple off day sets e.g. regularly occurring days such as weekends a
 ### offDaysFormat
 Deprecated as of v1.2.0; use offDays.format instead.
 
+### periodSeparators
+
+Object Array.  Default: 'Mon'
+
+Adds a visual reference to the start of a new calendar period i.e week, illustrated by a thicker dividing line between dates.
+
+Basic usage
+
+	periodSeparators: [{
+		dates: [ 'Mon' ],
+		format: 'ddd'
+	}]
+
+To define multiple period separators, define multiple objects like so.
+
+	periodSeparators: [{
+		dates: [ 'Mon' ],
+		format: 'ddd'
+	},
+	{
+		dates: [ '1' ],
+		format: 'D'
+	}]
+
 ### selectedDate
 Object.
 
@@ -188,14 +212,14 @@ Boolean. Default: true
 Whether or not to display the clickable calendar icon visible on selected date. By setting to false you are effectively removing the calendar date select functionality from the user.
 
 ### showOffDays
-Boolean. Default: true
+Deprecated as of v1.2.0; use the following instead.
 
-Whether or not to display off days.
+	offDays: []
 
 ### showStartOfWeek
-Boolean. Default: true
+Deprecate as of v1.2.0; use the following instead.
 
-Whether or not to display the start of week divider.
+	periodSeparators: []
 
 ### size
 String. Default: normal
@@ -218,19 +242,10 @@ Example
 Deprecated as of v1.2.0; use startDate.format instead.
 
 ### startOfWeek
-Object. Default: 'Mon'
-
-Sets for display purposes the start of the week, visually illustrated by a thicker dividing line betweeen dates.
-
-Example
-
-	startOfWeek: {
-		dates: [ 'Mon' ],
-		format: 'ddd'
-	}
+Deprecated as of v1.2.0; use periodSeparators instead.
 
 ### startOfWeekFormat
-Deprecated as of v1.2.0; use startOfWeek.format instead.
+Deprecated as of v1.2.0; use periodSeparators.format instead.
 
 ### squareEdges
 Boolean. Default: false

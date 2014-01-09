@@ -27,8 +27,14 @@
       <br/>      
       <h2>Method: getSelectedDate</h2>
       <div id="paginator-get-selected-date"></div>
-      <fieldset>
-      <button type="button" id="button-get-selected-date" class="btn">Get Selected Date</button></fieldset>
+      <button type="button" id="button-get-selected-date" class="btn">Get Selected Date</button>
+      <br/>
+      <h2>Multiple period separators - weeks and months</span></h2>
+      <div id="paginator-period-separators"></div>
+      <br/>
+      <h2>No off days + No period separators</span></h2>
+      <div id="paginator-no-offdays-no-separators"></div>
+      <br/>
       <br/>
       <br/>
       <br/>
@@ -83,7 +89,7 @@
             format: 'ddd',
             disable: true
           }]
-        }
+        };
         $('#paginator-disable-off-days').datepaginator(options);
 
         options = {
@@ -94,7 +100,7 @@
               hint: 'Weekend'
             }
           }]
-        }
+        };
         $('#paginator-disable-off-days-custom-hint').datepaginator(options);
 
         $('#paginator-get-selected-date').datepaginator({});
@@ -105,6 +111,24 @@
           };
           $('#paginator-get-selected-date').datepaginator('getSelectedDate', [selectedDate]);
         });
+
+        options = {
+          periodSeparators: [{
+            dates: [ 'Mon' ],
+            format: 'ddd'
+          },
+          {
+            dates: [ '1' ],
+            format: 'D'
+          }]
+        };
+        $('#paginator-period-separators').datepaginator(options);
+
+        options = {
+          periodSeparators: [],
+          offDays: []
+        };  
+        $('#paginator-no-offdays-no-separators').datepaginator(options);
 
   		});
   	</script>
