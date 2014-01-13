@@ -280,31 +280,31 @@
 		equal($('.dp-selected').attr('data-moment'), moment().format(options.selectedDate.format),
 			'Correct selectedDate when using default : todays date');
 
-		options = getOptions(init({selectedDate:{date:'2013-10-05'}}));
+		options = getOptions(init({selectedDate:{ date: '2013-10-05' }}));
 		equal($('.dp-selected').attr('data-moment'), moment('2013-10-05',options.selectedDate.format).format(options.selectedDate.format), //'2013-10-05', 
 			'Correct selectedDate when set via selectedDate option');
 
-		options = getOptions(init({selectedDate:{date:'05-10-2013',f:'DD-MM-YYYY'}}));
+		options = getOptions(init({selectedDate:{ date:'05-10-2013', format:'DD-MM-YYYY' }}));
 		equal($('.dp-selected').attr('data-moment'), moment('05-10-2013',options.selectedDate.format).format(options.selectedDate.format), //'05-10-2013', 
 			'Correct selectedDate when set via selectedDate using a custom date format');
 		
-		options = getOptions(init().datepaginator('setSelectedDate', '2013-10-06'));
+		options = getOptions(init().datepaginator('setSelectedDate', { date: '2013-10-06' }));
 		equal($('.dp-selected').attr('data-moment'), moment('2013-10-06',options.selectedDate.format).format(options.selectedDate.format), //'2013-10-06', 
 			'Correct selectedDate when set via setSelectedDate method using default format');
 
-		options = getOptions(init({selectedDate:{date:'2013-10-05',f:'DD-MM-YYYY'}}).datepaginator('setSelectedDate', '06-10-2013'));
+		options = getOptions(init({selectedDate:{ date: '2013-10-05', format: 'DD-MM-YYYY' }}).datepaginator('setSelectedDate', { date: '06-10-2013' }));
 		equal($('.dp-selected').attr('data-moment'), moment('06-10-2013',options.selectedDate.format).format(options.selectedDate.format), //'06-10-2013', 
 			'Correct selectedDate when set via setSelectedDate method using custom selectedDate.format set via options');
 
-		options = getOptions(init().datepaginator('setSelectedDate', ['06-10-2013', 'DD-MM-YYYY']));
+		options = getOptions(init().datepaginator('setSelectedDate', { date: '06-10-2013', format: 'DD-MM-YYYY'}));
 		equal($('.dp-selected').attr('data-moment'), moment('06-10-2013','DD-MM-YYYY').format(options.selectedDate.format), //'2013-10-06',
 			'Correct selectedDate when set via setSelectedDate method using custom selectedDate.format set in method arguments');
 
-		options = getOptions(init({startDate:'2013-12-01',selectedDate:{date:'2013-11-01'}}));
+		options = getOptions(init({startDate:'2013-12-01',selectedDate:{ date: '2013-11-01' }}));
 		equal($('.dp-selected').attr('data-moment'), options.startDate.date.format(options.selectedDate.format),
 			'Correctly overrides selectedDate when invalid : selectedDate < startDate');
 
-		options = getOptions(init({endDate:'2013-12-31',selectedDate:{date:'2014-01-01'}}));
+		options = getOptions(init({endDate:'2013-12-31',selectedDate:{ date: '2014-01-01' }}));
 		equal($('.dp-selected').attr('data-moment'), options.endDate.date.format(options.selectedDate.format),
 			'Correctly overrides selectedDate when invalid : selectedDate > endDate');
 	});

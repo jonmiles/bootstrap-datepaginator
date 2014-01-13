@@ -25,7 +25,7 @@
       <h2>Disable off days with custom onhover hint</h2>
       <div id="paginator-disable-off-days-custom-hint"></div>
       <br/>      
-      <h2>Method: getSelectedDate</h2>
+      <h2>Method: setSelectedDate + getSelectedDate</h2>
       <div id="paginator-get-selected-date"></div>
       <button type="button" id="button-get-selected-date" class="btn">Get Selected Date</button>
       <br/>
@@ -106,10 +106,16 @@
         $('#paginator-get-selected-date').datepaginator({});
         $('#button-get-selected-date').on('click', function (e) {
 
-          var selectedDate = function (date) {
-            console.log(date.format('YYYY-MM-DD'));
-          };
-          $('#paginator-get-selected-date').datepaginator('getSelectedDate', [selectedDate]);
+          var selecteDateObject = { date: '2014-01-13', format: 'YYYY-MM-DD' };
+          $('#paginator-get-selected-date').datepaginator('setSelectedDate', selecteDateObject, function (date) {
+            console.log('set date = ' + date.format('YYYY-MM-DD'));
+          });
+
+          $('#paginator-get-selected-date').datepaginator('getSelectedDate', null, function (date) {
+            console.log('got date = ' + date.format('YYYY-MM-DD'));
+          });
+
+          // $('#paginator-get-selected-date').datepaginator('remove');
         });
 
         options = {

@@ -96,17 +96,21 @@
 
 	DatePaginator.prototype = {
 
-		getSelectedDate: function (cb) {
+		getSelectedDate: function (options, cb) {
 
-			if (typeof cb === 'function') {
+			if (cb && (typeof cb === 'function')) {
 				cb(this.options.selectedDate.date.clone());
 			}
 		},
 
-		setSelectedDate: function (date, format) {
+		setSelectedDate: function (options, cb) {
 
-			this._setSelectedDate(moment(date, format ? format : this.options.selectedDate.format));
+			this._setSelectedDate(moment(options.date, options.format ? options.format : this.options.selectedDate.format));
 			this._render();
+
+			if (cb && (typeof cb === 'function')) {
+				cb(this.options.selectedDate.date.clone());
+			}
 		},
 
 		remove: function () {
@@ -267,7 +271,6 @@
 		},
 
 		_clickedHandler: function (event) {
-
 			event.preventDefault();
 			var target = $(event.target).closest('a');
 			var classList = target.attr('class') ? target.attr('class').split(' ') : [];
@@ -627,7 +630,7 @@
 
 	// Prevent against multiple instantiations,
 	// handle updates and method calls
-	$.fn[pluginName] = function (options, args) {
+	$.fn[pluginName] = function (options, args, fn) {
 
 		return this.each(function () {
 			var self = $.data(this, 'plugin_' + pluginName);
@@ -639,10 +642,7 @@
 					logError('No such method : ' + options);
 				}
 				else {
-					if (typeof args === 'string') {
-						args = [args];
-					}
-					self[options].apply(self, args);
+					self[options].call(self, args, fn);
 				}
 			}
 			else {
