@@ -272,7 +272,7 @@
 
 		_clickedHandler: function (event) {
 			event.preventDefault();
-			var target = $(event.target).closest('a');
+			var target = $(event.target);
 			var classList = target.attr('class') ? target.attr('class').split(' ') : [];
 
 			if (classList.indexOf('dp-no-select') !== -1) {
@@ -383,14 +383,16 @@
 					.addClass(this.options.size === 'sm' ? 'dp-nav-sm' : this.options.size === 'lg' ? 'dp-nav-lg' : '')
 					.addClass(this.options.squareEdges ? 'dp-nav-square-edges' : '')
 					.append($(this._template.icon)
-						.addClass('glyphicon-chevron-left'))
+						.addClass('glyphicon-chevron-left')
+						.addClass('dp-nav-left'))
 					.width(this.options.navItemWidth);
 				this.$rightNav = $(this._template.navItem)
 					.addClass('dp-nav-right')
 					.addClass(this.options.size === 'sm' ? 'dp-nav-sm' : this.options.size === 'lg' ? 'dp-nav-lg' : '')
 					.addClass(this.options.squareEdges ? 'dp-nav-square-edges' : '')
 					.append($(this._template.icon)
-						.addClass('glyphicon-chevron-right'))
+						.addClass('glyphicon-chevron-right')
+						.addClass('dp-nav-right'))
 					.width(this.options.navItemWidth);
 				this.$calendar = this.options.showCalendar ? $(this._template.calendar) : undefined;
 				this._injectStyle();

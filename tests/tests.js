@@ -381,14 +381,14 @@
 	test('Navigate backwards', function () {
 
 		// Test valid navigation
-		var options = getOptions(init()),
+		var options = getOptions(init({offDays:[]})),
 			selectedDate = getSelectedDateAsMoment(options);
-		$('.dp-nav-left').trigger('click');
+		$('a .dp-nav-left').trigger('click');
 		ok(getSelectedDateAsMoment(options).isSame(selectedDate.clone().subtract('day', 1)),
 			'Navigate backwards moves back 1 day');
 
 		// Test invalid navigation
-		options = getOptions(init({startDate:'2013-11-01',selectedDate:'2013-11-01'}));
+		options = getOptions(init({offDays:[],startDate:'2013-11-01',selectedDate:'2013-11-01'}));
 		selectedDate = getSelectedDateAsMoment(options);
 		$('a .dp-nav-left').trigger('click');
 		ok(getSelectedDateAsMoment(options).isSame(selectedDate),
@@ -398,14 +398,14 @@
 	test('Navigate forwards', function () {
 
 		// Test valid navigation
-		var options = getOptions(init()),
+		var options = getOptions(init({offDays:[]})),
 			selectedDate = getSelectedDateAsMoment(options);
-		$('.dp-nav-right').trigger('click');
+		$('a .dp-nav-right').trigger('click');
 		ok(getSelectedDateAsMoment(options).isSame(selectedDate.clone().add('day', 1)),
 			'Navigate forwards moves forward 1 day');
 
 		// Test invalid navigation
-		options = getOptions(init({endDate:'2013-11-01',selectedDate:'2013-11-01'}));
+		options = getOptions(init({offDays:[],endDate:'2013-11-01',selectedDate:'2013-11-01'}));
 		selectedDate = getSelectedDateAsMoment(options);
 		$('a .dp-nav-right').trigger('click');
 		ok(getSelectedDateAsMoment(options).isSame(selectedDate),
